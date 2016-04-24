@@ -1,90 +1,138 @@
-var round = 0;
-var ishuman = true;
-var scorePlayer = 1000;
-var scoreHuman = 1000;
-var scoreRobot = 1000;
+// Game data.
+//
+// TODO: load from an external JSON
+const data = {
+    "shakespeare": {
+        "human": {
+            "samples": human_extracts
+        },
+        "opponents": {
+            "alpha": {
+                "samples": robot_extracts
+            }
+        }
+    }
+};
+
+// Mutable game state.
+//
+var state = {
+    'game': null,
+    'round': 0,  // round counter
+    'scores': {
+        'player': 0,
+        'human': 0,
+        'robot': 0
+    }
+}
+
+// Mutable round state.
+//
+var round = {
+    'ishuman': true,
+}
+
 
 // GUI:
 
 var updateScores = function(opponentIsHuman, playerWon) {
     if (opponentIsHuman) {
-        var newPlayerScore = Elo.getNewRating(scorePlayer, scoreHuman,
+        var newPlayerScore = Elo.getNewRating(state['scores']['player'], state['scores']['human'],
                                               playerWon ? 1 : 0);
-        var newHumanScore = Elo.getNewRating(scoreHuman, scorePlayer,
+        var newHumanScore = Elo.getNewRating(state['scores']['human'], state['scores']['player'],
                                              playerWon ? 0 : 1);
-        var newRobotScore = scoreRobot;
+        var newRobotScore = state['scores']['robot'];
     } else {
-        var newPlayerScore = Elo.getNewRating(scorePlayer, scoreRobot,
+        var newPlayerScore = Elo.getNewRating(state['scores']['player'], state['scores']['robot'],
                                               playerWon ? 1 : 0);
-        var newHumanScore = scoreHuman;
-        var newRobotScore = Elo.getNewRating(scoreRobot, scorePlayer,
+        var newHumanScore = state['scores']['human'];
+        var newRobotScore = Elo.getNewRating(state['scores']['robot'], state['scores']['player'],
                                              playerWon ? 0 : 1);
     }
 
-    scorePlayer = newPlayerScore;
-    scoreHuman = newHumanScore;
-    scoreRobot = newRobotScore;
+    state['scores']['player'] = newPlayerScore;
+    state['scores']['human'] = newHumanScore;
+    state['scores']['robot'] = newRobotScore;
 
-    displayScores(scorePlayer, scoreHuman, scoreRobot);
+    displayScores(state['scores']['player'], state['scores']['human'], state['scores']['robot']);
 };
 
-var newGame = function(forceHuman) {
-    round += 1;
-    displayRound(round);
 
-    ishuman = forceHuman ? true : Math.random() < .5;
+var newGame = function(game) {
+    state['game'] = game;
+    state['round'] = 0;
+    state['scores']['player'] = 1000;
+    state['scores']['human'] = 1000;
+    state['scores']['robot'] = 1000;
+    newRound(true);
+};
+
+
+var newRound = function(forceHuman) {
+    state['round'] += 1;
+    displayRound(state['round']);
+
+    round['isthuman'] = forceHuman ? true : Math.random() < .5;
 
     var nextExtract = ''
-    if (ishuman) {
+    if (round['isthuman']) {
         var i = Math.floor(Math.random() * human_extracts.length);
         nextExtract = human_extracts[i];
     } else {
-        var i = Math.floor(Math.random() * robot_extracts.length);
-        nextExtract = robot_extracts[i];
+        var opponents = Object.keys(data[state['game']]['opponents']);
+
+        // TODO: Non-uniform opponent selection
+        var i = Math.floor(Math.random() * opponents.length);
+        var key = opponents[i];
+        var opponent = data[state['game']]['opponents'][key];
+
+        // TODO: Remove sample from selection
+        i = Math.floor(Math.random() * opponent['samples'].length);
+        nextExtract = opponent['samples'][i];
     }
     $('#arena').html(nextExtract);
 
-    console.log('New game! human: ' + ishuman);
+    console.log('New game! human: ' + round['isthuman']);
 };
 
 var playerLostToHuman = function() {
-    var newPlayerScore = Elo.getNewRating(scorePlayer, scoreHuman, 0);
-    var newHumanScore = Elo.getNewRating(scoreHuman, scorePlayer, 1);
+    var newPlayerScore = Elo.getNewRating(state['scores']['player'], state['scores']['human'], 0);
+    var newHumanScore = Elo.getNewRating(state['scores']['human'], state['scores']['player'], 1);
 
-    scorePlayer = newPlayerScore;
-    scoreHuman = newHumanScore;
+    state['scores']['player'] = newPlayerScore;
+    state['scores']['human'] = newHumanScore;
 
-    displayScores(scorePlayer, scoreHuman, scoreRobot);
+    displayScores(state['scores']['player'], state['scores']['human'], state['scores']['robot']);
 };
 
 var playerWonAgainstHuman = function() {
-    var newPlayerScore = Elo.getNewRating(scorePlayer, scoreHuman, 1);
-    var newHumanScore = Elo.getNewRating(scoreHuman, scorePlayer, 0);
+    var newPlayerScore = Elo.getNewRating(state['scores']['player'], state['scores']['human'], 1);
+    var newHumanScore = Elo.getNewRating(state['scores']['human'], state['scores']['player'], 0);
 
-    scorePlayer = newPlayerScore;
-    scoreHuman = newHumanScore;
+    state['scores']['player'] = newPlayerScore;
+    state['scores']['human'] = newHumanScore;
 
-    displayScores(scorePlayer, scoreHuman, scoreRobot);
+    displayScores(state['scores']['player'], state['scores']['human'], state['scores']['robot']);
 };
 
 var playerLostToRobot = function() {
-    var newPlayerScore = Elo.getNewRating(scorePlayer, scoreRobot, 0);
-    var newRobotScore = Elo.getNewRating(scoreRobot, scorePlayer, 1);
+    var newPlayerScore = Elo.getNewRating(state['scores']['player'], state['scores']['robot'], 0);
+    var newRobotScore = Elo.getNewRating(state['scores']['robot'], state['scores']['player'], 1);
 
-    scorePlayer = newPlayerScore;
-    scoreRobot = newRobotScore;
+    state['scores']['player'] = newPlayerScore;
+    state['scores']['robot'] = newRobotScore;
 
-    displayScores(scorePlayer, scoreHuman, scoreRobot);
+    displayScores(state['scores']['player'], state['scores']['human'], state['scores']['robot']);
 };
 
 var playerWonAgainstRobot = function() {
-    var newPlayerScore = Elo.getNewRating(scorePlayer, scoreRobot, 1);
-    var newRobotScore = Elo.getNewRating(scoreRobot, scorePlayer, 0);
+    var newPlayerScore = Elo.getNewRating(state['scores']['player'], state['scores']['robot'], 1);
+    var newRobotScore = Elo.getNewRating(state['scores']['robot'], state['scores']['player'], 0);
 
-    scorePlayer = newPlayerScore;
-    scoreRobot = newRobotScore;
+    state['scores']['player'] = newPlayerScore;
+    state['scores']['robot'] = newRobotScore;
 
-    displayScores(scorePlayer, scoreHuman, scoreRobot);
+    displayScores(state['scores']['player'], state['scores']['human'], state['scores']['robot']);
 };
 
 // Game logic:
@@ -122,19 +170,21 @@ var displayScores = function(scorePlayer, scoreHuman, scoreRobot) {
 };
 
 $('#human').click(function() {
-    if (ishuman)
+    if (round['isthuman'])
         playerWonAgainstHuman();
     else
         playerLostToRobot();
-    newGame();
+    newRound();
 });
 
 $('#robot').click(function() {
-    if (ishuman)
+    if (round['isthuman'])
         playerLostToHuman();
     else
         playerWonAgainstRobot();
-    newGame();
+    newRound();
 });
 
-newGame(true);
+
+// TODO: Select from list.
+newGame('shakespeare');
