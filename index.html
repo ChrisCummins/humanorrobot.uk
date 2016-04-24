@@ -2,16 +2,60 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <title>Human or Robot?</title>
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Bitter:400,400italic|Lora:400,400italic' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="styles.css">
   </head>
 </html>
 
 <body>
-  <h1>Human or Robot?</h1>
+  <div class="container">
+    <div class="header clearfix">
+      <!-- <nav> -->
+      <!--   <ul class="nav nav-pills pull-right"> -->
+      <!--     <li role="presentation" class="active"><a href="#">Fight!</a></li> -->
+      <!--     <li role="presentation"><a href="#">About</a></li> -->
+      <!--   </ul> -->
+      <!-- </nav> -->
+      <h1 class="text-center">Shakespeare or Robot?
+    </div>
 
-  <p>Site by <a href="http://chriscummins.cc" target="_blank">Chris Cummins</a>.</p>
+    <div class="scoreboard">
+      <p>
+        <span class="round">Round <span id="round-count">1</span></span>
+        <span class="scores">
+          Player: <span id="score-player" class="score">1000</span>,
+          <!-- Shakespeare: <span id="score-human" class="score">1000</span>, -->
+          Robot: <span id="score-robot" class="score">1000</span>
+        </span>
+      </p>
+    </div>
+    <div class="jumbotron">
+      <!-- <h1>Shakespeare vs. Robot</h1> -->
+      <p id="arena" class="lead">
+        Loading ...
+      </p>
+      <p>
+        <a id="human" class="btn decision btn-lg btn-success" href="#" role="button">Shakespeare</a>
+        <a id="robot" class="btn decision btn-lg btn-danger" href="#" role="button">Robot</a>
+      </p>
+    </div>
+  </div> <!-- /container -->
+
+  <footer class="footer text-center">
+    <p>&copy; 2016 <a href="http://chriscummins.cc" target="_blank">Chris Cummins</a>.</p>
+  </footer>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script language='javascript' type='text/javascript' src="elo.js"></script>
+  <script language='javascript' type="text/javascript" src='dataset.js'></script>
+  <script language='javascript' type="text/javascript" src='humanorrobot.js'></script>
 </body>
