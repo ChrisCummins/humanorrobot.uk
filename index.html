@@ -28,15 +28,21 @@
       <h1 class="text-center">Shakespeare or Robot?
     </div>
 
-    <div class="scoreboard">
-      <p>
+    <div class="row scoreboard">
+      <div class="col-sm-3">
         <span class="round">Round <span id="round-count">1</span></span>
+      </div>
+      <div class="col-sm-6 text-center">
         <span class="scores">
           Player: <span id="score-player" class="score">1000</span>,
           <!-- Shakespeare: <span id="score-human" class="score">1000</span>, -->
           Robot: <span id="score-robot" class="score">1000</span>
         </span>
-      </p>
+      </div>
+      <div class="col-sm-3 text-right">
+        <span id="correct" class="result">Correct!</span>
+        <span id="incorrect" class="result">Incorrect!</span>
+      </div>
     </div>
     <div class="jumbotron">
       <!-- <h1>Shakespeare vs. Robot</h1> -->

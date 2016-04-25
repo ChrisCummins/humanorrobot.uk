@@ -78,6 +78,7 @@ var playerLostToHuman = function() {
     state['scores']['human'] = newHumanScore;
 
     displayScores(state['scores']['player'], state['scores']['human'], state['scores']['robot']);
+    displayIncorrect();
 };
 
 var playerWonAgainstHuman = function() {
@@ -88,6 +89,7 @@ var playerWonAgainstHuman = function() {
     state['scores']['human'] = newHumanScore;
 
     displayScores(state['scores']['player'], state['scores']['human'], state['scores']['robot']);
+    displayCorrect();
 };
 
 var playerLostToRobot = function() {
@@ -98,6 +100,7 @@ var playerLostToRobot = function() {
     state['scores']['robot'] = newRobotScore;
 
     displayScores(state['scores']['player'], state['scores']['human'], state['scores']['robot']);
+    displayIncorrect();
 };
 
 var playerWonAgainstRobot = function() {
@@ -108,11 +111,24 @@ var playerWonAgainstRobot = function() {
     state['scores']['robot'] = newRobotScore;
 
     displayScores(state['scores']['player'], state['scores']['human'], state['scores']['robot']);
+    displayCorrect();
+};
+
+var displayCorrect = function() {
+    $('#incorrect').hide();
+    $('#correct').show();
+    $('#correct').fadeOut('slow');
+};
+
+var displayIncorrect = function() {
+    $('#correct').hide();
+    $('#incorrect').show();
+    $('#incorrect').fadeOut('slow');
 };
 
 var displayRound = function(round) {
     $('#round-count').text(round);
-}
+};
 
 var displayScores = function(scorePlayer, scoreHuman, scoreRobot) {
     $('#score-player').text(scorePlayer);

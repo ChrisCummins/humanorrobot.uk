@@ -68,7 +68,6 @@ body {
   font-weight: bold;
 }
 .scoreboard .scores {
-  margin-left: 25px;
   font-size: 90%;
   font-weight: normal;
 }
@@ -79,6 +78,15 @@ body {
   color: #5cb85c;
 }
 .scoreboard .scores .score.losing {
+  color: #d9534f;
+}
+.scoreboard .result {
+  display: none;
+}
+.scoreboard .result#correct {
+  color: #5cb85c;
+}
+.scoreboard .result#incorrect {
   color: #d9534f;
 }
 
@@ -98,8 +106,8 @@ body {
     padding-left: 0;
   }
   /* Space out the masthead */
-  .header {
-    margin-bottom: 30px;
+  .header,.scoreboard {
+    margin-bottom: 20px;
   }
   /* Remove the bottom border on the jumbotron for visual effect */
   .jumbotron {
