@@ -33,31 +33,6 @@ var round = {
 }
 
 
-// GUI:
-
-var updateScores = function(opponentIsHuman, playerWon) {
-    if (opponentIsHuman) {
-        var newPlayerScore = Elo.getNewRating(state['scores']['player'], state['scores']['human'],
-                                              playerWon ? 1 : 0);
-        var newHumanScore = Elo.getNewRating(state['scores']['human'], state['scores']['player'],
-                                             playerWon ? 0 : 1);
-        var newRobotScore = state['scores']['robot'];
-    } else {
-        var newPlayerScore = Elo.getNewRating(state['scores']['player'], state['scores']['robot'],
-                                              playerWon ? 1 : 0);
-        var newHumanScore = state['scores']['human'];
-        var newRobotScore = Elo.getNewRating(state['scores']['robot'], state['scores']['player'],
-                                             playerWon ? 0 : 1);
-    }
-
-    state['scores']['player'] = newPlayerScore;
-    state['scores']['human'] = newHumanScore;
-    state['scores']['robot'] = newRobotScore;
-
-    displayScores(state['scores']['player'], state['scores']['human'], state['scores']['robot']);
-};
-
-
 var newGame = function(game) {
     state['game'] = game;
     state['round'] = 0;
@@ -134,8 +109,6 @@ var playerWonAgainstRobot = function() {
 
     displayScores(state['scores']['player'], state['scores']['human'], state['scores']['robot']);
 };
-
-// Game logic:
 
 var displayRound = function(round) {
     $('#round-count').text(round);
