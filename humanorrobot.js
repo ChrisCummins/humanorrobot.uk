@@ -22,23 +22,34 @@ var state = {
     'scores': {
         'player': 0,
         'human': 0,
-        'robot': 0
+        'robot': 0,
+        'opponents': {}
     }
-}
+};
 
 // Mutable round state.
 //
 var round = {
     'ishuman': true,
-}
+    'opponent': null // Name of robot opponent
+};
 
 
 var newGame = function(game) {
+    var initScore = 1000;
+
     state['game'] = game;
     state['round'] = 0;
-    state['scores']['player'] = 1000;
-    state['scores']['human'] = 1000;
-    state['scores']['robot'] = 1000;
+    state['scores']['player'] = initScore;
+    state['scores']['human'] = initScore;
+    state['scores']['robot'] = initScore;
+
+    // Populate opponent scores:
+    state['scores']['opponents'] = {};
+    for (var opponent in data[state['game']]['opponents']) {
+        state['scores']['opponents'][opponent] = initScore;
+    }
+
     newRound(true);
 };
 
@@ -47,19 +58,21 @@ var newRound = function(forceHuman) {
     state['round'] += 1;
     displayRound(state['round']);
 
-    round['isthuman'] = forceHuman ? true : Math.random() < .5;
+    round['ishuman'] = forceHuman ? true : Math.random() < .5;
 
     var nextExtract = ''
-    if (round['isthuman']) {
+    if (round['ishuman']) {
         var i = Math.floor(Math.random() * human_extracts.length);
         nextExtract = human_extracts[i];
+        round['opponent'] = null;
     } else {
         var opponents = Object.keys(data[state['game']]['opponents']);
 
         // TODO: Non-uniform opponent selection
         var i = Math.floor(Math.random() * opponents.length);
-        var key = opponents[i];
-        var opponent = data[state['game']]['opponents'][key];
+        var opponent_name = opponents[i];
+        var opponent = data[state['game']]['opponents'][opponent_name];
+        round['opponent'] = opponent_name;
 
         // TODO: Remove sample from selection
         i = Math.floor(Math.random() * opponent['samples'].length);
@@ -67,7 +80,10 @@ var newRound = function(forceHuman) {
     }
     $('#arena').html(nextExtract);
 
-    console.log('New game! human: ' + round['isthuman']);
+    var msg = 'New round! human: ' + round['ishuman'];
+    if (!round['ishuman'])
+        msg += ', opponent = ' + round['opponent'];
+    console.log(msg);
 };
 
 var playerLostToHuman = function() {
@@ -77,7 +93,9 @@ var playerLostToHuman = function() {
     state['scores']['player'] = newPlayerScore;
     state['scores']['human'] = newHumanScore;
 
-    displayScores(state['scores']['player'], state['scores']['human'], state['scores']['robot']);
+    displayScores(state['scores']['player'],
+                  state['scores']['human'],
+                  state['scores']['robot']);
     displayIncorrect();
 };
 
@@ -88,42 +106,60 @@ var playerWonAgainstHuman = function() {
     state['scores']['player'] = newPlayerScore;
     state['scores']['human'] = newHumanScore;
 
-    displayScores(state['scores']['player'], state['scores']['human'], state['scores']['robot']);
+    displayScores(state['scores']['player'],
+                  state['scores']['human'],
+                  state['scores']['robot']);
     displayCorrect();
 };
 
 var playerLostToRobot = function() {
-    var newPlayerScore = Elo.getNewRating(state['scores']['player'], state['scores']['robot'], 0);
-    var newRobotScore = Elo.getNewRating(state['scores']['robot'], state['scores']['player'], 1);
+    var newPlayerScore = Elo.getNewRating(
+        state['scores']['player'], state['scores']['robot'], 0);
+    var newRobotScore = Elo.getNewRating(
+        state['scores']['robot'], state['scores']['player'], 1);
+    var newOpponentScore = Elo.getNewRating(
+        state['scores']['opponents'][round['opponent']],
+        state['scores']['player'], 1);
+    state['scores']['opponents'][round['opponent']] = newOpponentScore;
 
     state['scores']['player'] = newPlayerScore;
     state['scores']['robot'] = newRobotScore;
 
-    displayScores(state['scores']['player'], state['scores']['human'], state['scores']['robot']);
+    displayScores(state['scores']['player'],
+                  state['scores']['human'],
+                  state['scores']['robot']);
     displayIncorrect();
 };
 
 var playerWonAgainstRobot = function() {
-    var newPlayerScore = Elo.getNewRating(state['scores']['player'], state['scores']['robot'], 1);
-    var newRobotScore = Elo.getNewRating(state['scores']['robot'], state['scores']['player'], 0);
+    var newPlayerScore = Elo.getNewRating(
+        state['scores']['player'], state['scores']['robot'], 1);
+    var newRobotScore = Elo.getNewRating(
+        state['scores']['robot'], state['scores']['player'], 0);
+    var newOpponentScore = Elo.getNewRating(
+        state['scores']['opponents'][round['opponent']],
+        state['scores']['player'], 0);
+    state['scores']['opponents'][round['opponent']] = newOpponentScore;
 
     state['scores']['player'] = newPlayerScore;
     state['scores']['robot'] = newRobotScore;
 
-    displayScores(state['scores']['player'], state['scores']['human'], state['scores']['robot']);
+    displayScores(state['scores']['player'],
+                  state['scores']['human'],
+                  state['scores']['robot']);
     displayCorrect();
 };
 
 var displayCorrect = function() {
     $('#incorrect').hide();
     $('#correct').show();
-    $('#correct').fadeOut('slow');
+    $('#correct').fadeOut(1000);
 };
 
 var displayIncorrect = function() {
     $('#correct').hide();
     $('#incorrect').show();
-    $('#incorrect').fadeOut('slow');
+    $('#incorrect').fadeOut(1000);
 };
 
 var displayRound = function(round) {
@@ -155,11 +191,16 @@ var displayScores = function(scorePlayer, scoreHuman, scoreRobot) {
         $('#score-robot').removeClass('losing');
     }
 
-    console.log(scorePlayer, scoreHuman, scoreRobot);
+    console.log('Scores: ');
+    console.log('    player = ' + state['scores']['player']);
+    console.log('    human = ' + state['scores']['human']);
+    for (var opponent in data[state['game']]['opponents']) {
+        console.log('    ' + opponent + ' = ' + state['scores']['opponents'][opponent]);
+    }
 };
 
 $('#human').click(function() {
-    if (round['isthuman'])
+    if (round['ishuman'])
         playerWonAgainstHuman();
     else
         playerLostToRobot();
@@ -167,7 +208,7 @@ $('#human').click(function() {
 });
 
 $('#robot').click(function() {
-    if (round['isthuman'])
+    if (round['ishuman'])
         playerLostToHuman();
     else
         playerWonAgainstRobot();
