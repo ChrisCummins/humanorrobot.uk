@@ -25,6 +25,10 @@ var state = {
         'human': 0,
         'robot': 0,
         'opponents': {}
+    },
+    'gamesPlayed': {
+        'human': 0,
+        'opponents': {}
     }
 };
 
@@ -49,6 +53,12 @@ var newGame = function(game) {
     state['scores']['opponents'] = {};
     for (var opponent in data[state['game']]['opponents']) {
         state['scores']['opponents'][opponent] = initScore;
+    }
+
+    state['gamesPlayed']['human'] = 0;
+    state['gamesPlayed']['opponents'] = {};
+    for (var opponent in data[state['game']]['opponents']) {
+        state['gamesPlayed']['opponents'][opponent] = 0;
     }
 
     newRound(true);
@@ -93,6 +103,7 @@ var playerLostToHuman = function() {
 
     state['scores']['player'] = newPlayerScore;
     state['scores']['human'] = newHumanScore;
+    state['gamesPlayed']['human'] += 1;
 
     displayScores(state['scores']['player'],
                   state['scores']['human'],
@@ -106,6 +117,7 @@ var playerWonAgainstHuman = function() {
 
     state['scores']['player'] = newPlayerScore;
     state['scores']['human'] = newHumanScore;
+    state['gamesPlayed']['human'] += 1;
 
     displayScores(state['scores']['player'],
                   state['scores']['human'],
@@ -125,6 +137,7 @@ var playerLostToRobot = function() {
 
     state['scores']['player'] = newPlayerScore;
     state['scores']['robot'] = newRobotScore;
+    state['gamesPlayed']['opponents'][round['opponent']] += 1;
 
     displayScores(state['scores']['player'],
                   state['scores']['human'],
@@ -144,6 +157,7 @@ var playerWonAgainstRobot = function() {
 
     state['scores']['player'] = newPlayerScore;
     state['scores']['robot'] = newRobotScore;
+    state['gamesPlayed']['opponents'][round['opponent']] += 1;
 
     displayScores(state['scores']['player'],
                   state['scores']['human'],
@@ -194,9 +208,12 @@ var displayScores = function(scorePlayer, scoreHuman, scoreRobot) {
 
     console.log('Scores: ');
     console.log('    player = ' + state['scores']['player']);
-    console.log('    human = ' + state['scores']['human']);
+    console.log('    human = ' + state['scores']['human'] + ' (' +
+                state['gamesPlayed']['human'] +' rounds)');
     for (var opponent in data[state['game']]['opponents']) {
-        console.log('    ' + opponent + ' = ' + state['scores']['opponents'][opponent]);
+        console.log('    ' + opponent + ' = ' +
+                    state['scores']['opponents'][opponent] + ' (' +
+                    state['gamesPlayed']['opponents'][opponent] +' rounds)');
     }
 };
 
