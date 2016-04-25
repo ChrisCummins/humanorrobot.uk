@@ -75,10 +75,10 @@ body {
   font-weight: bold;
 }
 .scoreboard .scores .score.winning {
-  color: #5cb85c;
+  /* color: #5cb85c; */
 }
 .scoreboard .scores .score.losing {
-  color: #d9534f;
+  /* color: #d9534f; */
 }
 .scoreboard .result {
   display: none;
