@@ -168,13 +168,13 @@ var playerWonAgainstRobot = function() {
 var displayCorrect = function() {
     $('#incorrect').hide();
     $('#correct').show();
-    $('#correct').fadeOut(1000);
+    $('#correct').fadeOut(2000);
 };
 
 var displayIncorrect = function() {
     $('#correct').hide();
     $('#incorrect').show();
-    $('#incorrect').fadeOut(1000);
+    $('#incorrect').fadeOut(2000);
 };
 
 var displayRound = function(round) {
