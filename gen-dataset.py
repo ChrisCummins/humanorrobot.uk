@@ -19,6 +19,20 @@ from multiprocessing import cpu_count,Pool
 from subprocess import Popen,PIPE,STDOUT
 from tempfile import NamedTemporaryFile
 
+def get_samples(in_path, num_samples=300):
+    samples = []
+    sample_lines = 10
+    with open(in_path) as infile:
+        txt = infile.read()
+        lines = txt.split('\n')
+        for i in range(num_samples):
+            i = randrange(0, len(lines) - sample_lines)
+            extract = '<br/>'.join([cgi.escape(x.strip()) for x in
+                                    lines[i:i + sample_lines]])
+            samples.append(extract)
+    return samples
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("input_txt", help="path to training data")
@@ -28,31 +42,16 @@ def main():
     num_extracts = 300
     extract_lines = 10
 
-    human_extracts = []
-    with open(args.input_txt) as infile:
-        input_txt = infile.read()
-        input_lines = input_txt.split('\n')
+    extracts = { 'human': get_samples(args.input_txt) }
 
-        for i in range(num_extracts):
-            start_i = randrange(0, len(input_lines) - extract_lines)
-            extract = ' '.join([cgi.escape(x) for x in
-                                 input_lines[start_i:start_i + extract_lines]])
-            human_extracts.append(extract)
-
-    robot_extracts = []
-    for path in os.listdir('samples'):
-        with open(os.path.join('samples', path)) as infile:
-            extract = ' '.join([cgi.escape(x) for x in
-                                 infile.read().split('\n')])
-            robot_extracts.append(extract)
-
+    robot_names = ['alpha', 'bravo', 'charlie', 'delta']
+    for path in sorted(os.listdir('samples')):
+        robot_extracts = get_samples(os.path.join('samples', path))
+        extracts[robot_names.pop(0)] = robot_extracts
 
     with open('dataset.js', 'w') as out:
-        out.write('var human_extracts = ')
-        out.write(json.dumps(human_extracts, indent=2, separators=(',', ': ')))
-        out.write('\nvar robot_extracts = ')
-        out.write(json.dumps(robot_extracts, indent=2, separators=(',', ': ')))
-
+        out.write('const Extracts = ')
+        out.write(json.dumps(extracts, indent=2, separators=(',', ': ')))
 
 if __name__ == '__main__':
     main()

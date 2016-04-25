@@ -4,12 +4,13 @@
 const data = {
     "shakespeare": {
         "human": {
-            "samples": human_extracts
+            "samples": Extracts['human']
         },
         "opponents": {
-            "alpha": {
-                "samples": robot_extracts
-            }
+            "alpha": { "samples": Extracts['alpha'] },
+            "bravo": { "samples": Extracts['bravo'] },
+            "charlie": { "samples": Extracts['charlie'] },
+            "delta": { "samples": Extracts['delta'] }
         }
     }
 };
@@ -62,8 +63,8 @@ var newRound = function(forceHuman) {
 
     var nextExtract = ''
     if (round['ishuman']) {
-        var i = Math.floor(Math.random() * human_extracts.length);
-        nextExtract = human_extracts[i];
+        var i = Math.floor(Math.random() * data[state['game']]['human']['samples'].length);
+        nextExtract = [i];
         round['opponent'] = null;
     } else {
         var opponents = Object.keys(data[state['game']]['opponents']);
