@@ -74,7 +74,7 @@ var newRound = function(forceHuman) {
     var nextExtract = ''
     if (round['ishuman']) {
         var i = Math.floor(Math.random() * data[state['game']]['human']['samples'].length);
-        nextExtract = [i];
+        nextExtract = data[state['game']]['human']['samples'][i];
         round['opponent'] = null;
     } else {
         var opponents = Object.keys(data[state['game']]['opponents']);
