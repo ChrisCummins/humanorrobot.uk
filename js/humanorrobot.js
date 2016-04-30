@@ -38,7 +38,8 @@ var state = {
 //
 var round = {
     'ishuman': true,
-    'opponent': null // Name of robot opponent
+    'opponent': null, // Name of robot opponent
+    'extract': null
 };
 
 
@@ -91,7 +92,8 @@ var newRound = function(forceHuman) {
         i = Math.floor(Math.random() * opponent['samples'].length);
         nextExtract = opponent['samples'][i];
     }
-    $('#arena').html(nextExtract);
+    round['extract'] = nextExtract;
+    $('#arena').html(round['extract']);
 
     var msg = 'New round! human: ' + round['ishuman'];
     if (!round['ishuman'])
@@ -107,9 +109,6 @@ var playerLostToHuman = function() {
     state['scores']['human'] = newHumanScore;
     state['gamesPlayed']['human'] += 1;
 
-    displayScores(state['scores']['player'],
-                  state['scores']['human'],
-                  state['scores']['robot']);
     displayIncorrect();
 };
 
@@ -121,9 +120,6 @@ var playerWonAgainstHuman = function() {
     state['scores']['human'] = newHumanScore;
     state['gamesPlayed']['human'] += 1;
 
-    displayScores(state['scores']['player'],
-                  state['scores']['human'],
-                  state['scores']['robot']);
     displayCorrect();
 };
 
@@ -141,9 +137,6 @@ var playerLostToRobot = function() {
     state['scores']['robot'] = newRobotScore;
     state['gamesPlayed']['opponents'][round['opponent']] += 1;
 
-    displayScores(state['scores']['player'],
-                  state['scores']['human'],
-                  state['scores']['robot']);
     displayIncorrect();
 };
 
@@ -161,10 +154,24 @@ var playerWonAgainstRobot = function() {
     state['scores']['robot'] = newRobotScore;
     state['gamesPlayed']['opponents'][round['opponent']] += 1;
 
+    displayCorrect();
+};
+
+var endRound = function() {
+    var giveaway = getGiveawayText();
+    if (giveaway) {
+        var idx = round['extract'].indexOf(giveaway);
+        console.log('giveaway: ' + giveaway);
+        console.log('STARTING AT: ' + idx);
+    }
+
+    // reset giveaway:
+    document.getSelection().removeAllRanges();
+    $('#giveaway').hide();
+
     displayScores(state['scores']['player'],
                   state['scores']['human'],
                   state['scores']['robot']);
-    displayCorrect();
 };
 
 var displayCorrect = function() {
@@ -185,6 +192,16 @@ var displayIncorrect = function() {
     $('#incorrect').show();
     $('#incorrect').css('opacity', 1.0);
     $('#incorrect').fadeOut(2000);
+};
+
+var getSelectionText = function() {
+    var text = "";
+    if (window.getSelection) {
+        text = window.getSelection().toString();
+    } else if (document.selection && document.selection.type != "Control") {
+        text = document.selection.createRange().text;
+    }
+    return text;
 };
 
 var displayRound = function(round) {
@@ -227,19 +244,77 @@ var displayScores = function(scorePlayer, scoreHuman, scoreRobot) {
     }
 };
 
+// The giveaway
+
+var getSelectedText = function() {
+    var text = "";
+    if (typeof window.getSelection != "undefined") {
+        text = window.getSelection().toString();
+    } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
+        text = document.selection.createRange().text;
+    }
+    return text;
+};
+
+var getSelectionParentElement = function() {
+    var parentEl = null, sel;
+    if (window.getSelection) {
+        sel = window.getSelection();
+        if (sel.rangeCount) {
+            parentEl = sel.getRangeAt(0).commonAncestorContainer;
+            if (parentEl.nodeType != 1)
+                parentEl = parentEl.parentNode;
+        }
+    } else if ( (sel = document.selection) && sel.type != "Control") {
+        parentEl = sel.createRange().parentElement();
+    }
+
+    return parentEl;
+};
+
+var getGiveawayText = function() {
+    var parentEl = getSelectionParentElement();
+
+    if (parentEl && parentEl.id === 'arena')
+        return getSelectedText();
+    else
+        return null;
+};
+
+var giveawayPopoverCb = function() {
+    var giveaway = getGiveawayText()
+    if (giveaway) {
+        $('#giveaway').css('display', 'block');
+        $('#giveaway').css('position', 'absolute');
+        $('#giveaway').css('left', event.clientX + 10);
+        $('#giveaway').css('top', event.clientY + 15);
+    } else {
+        $('#giveaway').css('display', 'none');
+    }
+};
+
+document.onmouseup = giveawayPopoverCb;
+document.onkeyup = giveawayPopoverCb;
+
+
 $('#human').click(function() {
     if (round['ishuman'])
         playerWonAgainstHuman();
     else
         playerLostToRobot();
+
+    endRound();
     newRound();
 });
 
 $('#robot').click(function() {
+
     if (round['ishuman'])
         playerLostToHuman();
     else
         playerWonAgainstRobot();
+
+    endRound();
     newRound();
 });
 

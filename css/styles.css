@@ -86,6 +86,29 @@ body {
   font-size: 300%;
 }
 
+.jumbotron #arena::selection {
+  background-color: #222;
+  color: #d9332f;
+}
+
+.tooltipDiv {
+  text-align: center;
+  display: none;
+  z-index: 101;
+  background-color: #222;
+  color: #eee;
+  border: 1px solid #aaa;
+  padding: 8px;
+  border-radius: 7px;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 .scoreboard {
   font-size: 150%;
   font-weight: bold;
