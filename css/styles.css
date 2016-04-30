@@ -31,6 +31,17 @@ body {
   border-top: 1px solid #e5e5e5;
 }
 
+.site-header .or {
+  margin-left: 1px;
+  margin-right: 2px;
+}
+.site-header .human {
+  color: #5cb85c;
+}
+.site-header .robot {
+  color: #d9534f;
+}
+
 /* Customize container */
 @media (min-width: 768px) {
   .container {
