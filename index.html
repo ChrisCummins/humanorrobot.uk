@@ -77,7 +77,7 @@
           by a human.
         </p>
         <p>
-          <a id="start" class="btn decision btn-lg btn-info" href="#" role="button">
+          <a class="btn decision btn-lg btn-info game-start-btn" href="#" role="button">
             <i class="fa fa-play" aria-hidden="true"></i>
             Play
           </a>
@@ -104,21 +104,39 @@
 
     <!-- Head to head mode -->
     <div class="h2h">
+      <div class="jumbotron preamble">
+        <h3 class="title"></h3>
+        <hr/>
+        <p class="lead">
+          Head to head mode.
+        </p>
+        <p class="lead">
+          <strong>Hint:</strong> In the first round, the human is always on
+          the <i>left</i>.
+        </p>
+        <p>
+          <a class="btn decision btn-lg btn-info game-start-btn" href="#" role="button">
+            <i class="fa fa-play" aria-hidden="true"></i>
+            Play
+          </a>
+        </p>
+      </div>  <!-- /.preamble -->
+
       <div class="arena col-md-12" style="display:none;">
-        <div class="col-md-6">
+        <div class="jumbotron col-md-6">
           <p id="arena-a" class="lead">
             Loading ...
           </p>
           <p>
-            <a id="robot" class="btn decision btn-lg btn-danger" href="#" role="button">Robot</a>
+            <a id="is-a-btn" class="btn decision btn-lg btn-danger" href="#" role="button">Robot</a>
           </p>
         </div>
-        <div class="col-md-6">
+        <div class="jumbotron col-md-6">
           <p id="arena-b" class="lead">
             Loading ...
           </p>
           <p>
-            <a id="robot" class="btn decision btn-lg btn-danger" href="#" role="button">Robot</a>
+            <a id="is-b-btn" class="btn decision btn-lg btn-danger" href="#" role="button">Robot</a>
           </p>
         </div>
       </div>  <!-- /.arena -->

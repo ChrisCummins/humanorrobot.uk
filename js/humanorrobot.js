@@ -39,6 +39,37 @@ var GameState = {
 };
 
 
+var newRound_h2h = function() {
+    // console.log('DEBUG: newRound_h2h()');
+
+    var forcehumanisA = GameState.rounds_played.player === 0;
+    var humanisA = forcehumanisA ? true : Math.random() < .5;
+
+    var i = Math.floor(Math.random() * GameState.data.human.samples.length);
+    var nextHumanExtract = GameState.data.human.samples[i];
+
+    var opponents = Object.keys(GameState.data.opponents);
+
+    // TODO: Non-uniform opponent selection
+    i = Math.floor(Math.random() * opponents.length);
+    var opponent_name = opponents[i];
+    GameState.round.opponent = opponent_name;
+
+    var opponent = GameState.data.opponents[opponent_name];
+    i = Math.floor(Math.random() * opponent.samples.length);
+    var nextRobotExtract = opponent.samples[i];
+
+    var nextA = humanisA ? nextHumanExtract : nextRobotExtract;
+    var nextB = humanisA ? nextRobotExtract : nextHumanExtract;
+
+    $('#arena-a').html(nextA);
+    $('#arena-b').html(nextB);
+
+    console.log('New round! human on left: ' + humanisA +
+                ', opponent = ' + opponent_name);
+};
+
+
 var newRound_tt = function() {
     // console.log('DEBUG: newRound_tt()');
 
@@ -162,6 +193,59 @@ var endRound_tt = function(btnId) {
             return playerWonAgainstRobot();
     } else {
         throw 'endRound_tt(): unrecognised btn: ' + btnId;
+    }
+};
+
+
+var endRound_h2h = function(btnId) {
+    var playerLost = function() {
+        var newPlayerScore = Elo.getNewRating(
+            GameState.scores.player, GameState.scores.robot, 0);
+        var newRobotScore = Elo.getNewRating(
+            GameState.scores.robot, GameState.scores.player, 1);
+        var newOpponentScore = Elo.getNewRating(
+            GameState.scores.opponents[GameState.round.opponent],
+            GameState.scores.player, 1);
+        GameState.scores.opponents[GameState.round.opponent] = newOpponentScore;
+
+        GameState.scores.player = newPlayerScore;
+        GameState.scores.robot = newRobotScore;
+        GameState.rounds_played.opponents[GameState.round.opponent] += 1;
+
+        return false;
+    };
+
+    var playerWon = function() {
+        var newPlayerScore = Elo.getNewRating(
+            GameState.scores.player, GameState.scores.robot, 1);
+        var newRobotScore = Elo.getNewRating(
+            GameState.scores.robot, GameState.scores.player, 0);
+        var newOpponentScore = Elo.getNewRating(
+            GameState.scores.opponents[GameState.round.opponent],
+            GameState.scores.player, 0);
+        GameState.scores.opponents[GameState.round.opponent] = newOpponentScore;
+
+        GameState.scores.player = newPlayerScore;
+        GameState.scores.robot = newRobotScore;
+        GameState.rounds_played.opponents[GameState.round.opponent] += 1;
+
+        return true;
+    };
+
+    // console.log('DEBUG: endRound_h2h()');
+
+    if (btnId === 'is-a-btn') {
+        if (GameState.round.humanisA)
+            return playerLost();
+        else
+            return playerWon();
+    } else if (btnId === 'is-b-btn') {
+        if (GameState.round.humanisA)
+            return playerWon();
+        else
+            return playerLost();
+    } else {
+        throw 'endRound_h2h(): unrecognised btn: ' + btnId;
     }
 };
 
@@ -319,20 +403,16 @@ document.onmouseup = giveawayPopoverCb;
 document.onkeyup = giveawayPopoverCb;
 
 
-$('#human').click(function() {
+$('#human, #robot, #is-a-btn, #is-b-btn').click(function() {
     endRound(this.id);
     newRound();
 });
 
-$('#robot').click(function() {
-    endRound(this.id);
-    newRound();
-});
 
 /*
  * Callback fired once a user presses the preamble 'start' button.
  */
-$('#start').click(function() {
+$('.game-start-btn').click(function() {
     // Prepare GUI:
     $('.scoreboard').show();
     var modeSel = '.' + GameState.mode;
@@ -349,6 +429,16 @@ var newGame_tt = function() {
     GameState.round.ishuman = true;
     GameState.round.opponent = null;
     GameState.round.extract = null;
+};
+
+
+var newGame_h2h = function() {
+    // console.log('DEBUG: newGame_h2h()');
+
+    GameState.round.humanisA = true;
+    GameState.round.opponent = null;
+    GameState.round.extractA = null;
+    GameState.round.extractB = null;
 };
 
 
