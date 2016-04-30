@@ -41,6 +41,15 @@ body {
 .site-header .robot {
   color: #d9534f;
 }
+.site-header a {
+    color: #333;
+    text-decoration: none;
+}
+
+.site-header a:hover, a:focus {
+    color: #333;
+    text-decoration: none;
+}
 
 /* Customize container */
 @media (min-width: 768px) {
