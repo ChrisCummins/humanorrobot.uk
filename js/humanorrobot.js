@@ -254,9 +254,13 @@ var endRound = function(/* ID of the button pressed: */btnId) {
 
     var giveaway = getGiveawayText();
     if (giveaway) {
-        var idx = RoundState['extract'].indexOf(giveaway);
-        console.log('giveaway: ' + giveaway);
-        console.log('STARTING AT: ' + idx);
+        try {  // TODO: Get extract indices
+            var idx = RoundState['extract'].indexOf(giveaway);
+            console.log('giveaway: ' + giveaway);
+            console.log('STARTING AT: ' + idx);
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     var fn = window['endRound_' + GameState.mode];
@@ -493,9 +497,3 @@ var newGame = function(game_id, mode) {
     if (typeof fn === 'function')
         fn();
 };
-
-
-var main = function() {
-    newGame('shakespeare', 'tt');
-};
-main();

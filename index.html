@@ -85,7 +85,7 @@
       </div>  <!-- /.preamble -->
 
       <div class="jumbotron arena" style="display:none;">
-        <p id="arena" class="lead">
+        <p id="arena" class="lead text">
           Loading ...
         </p>
         <p>
@@ -108,11 +108,15 @@
         <h3 class="title"></h3>
         <hr/>
         <p class="lead">
-          Head to head mode.
+          In this game you be shown two extracts of text, side by
+          side. One of them was written a human, the other by a
+          robot. Your role is to determine which of the two was written by a robot. The human text
+          comes from <span class="data-src"></span>. Good
+          luck!
         </p>
         <p class="lead">
-          <strong>Hint:</strong> In the first round, the human is always on
-          the <i>left</i>.
+          <strong>Hint:</strong> In the first round, the human text is
+          always on the <i>left</i>.
         </p>
         <p>
           <a class="btn decision btn-lg btn-info game-start-btn" href="#" role="button">
@@ -124,7 +128,7 @@
 
       <div class="arena col-md-12" style="display:none;">
         <div class="jumbotron col-md-6">
-          <p id="arena-a" class="lead">
+          <p id="arena-a" class="lead text">
             Loading ...
           </p>
           <p>
@@ -132,7 +136,7 @@
           </p>
         </div>
         <div class="jumbotron col-md-6">
-          <p id="arena-b" class="lead">
+          <p id="arena-b" class="lead text">
             Loading ...
           </p>
           <p>
@@ -152,4 +156,8 @@
   <script language='javascript' type='text/javascript' src="/js/elo.js"></script>
   <script language='javascript' type="text/javascript" src='/js/dataset.js'></script>
   <script language='javascript' type="text/javascript" src='/js/humanorrobot.js'></script>
+
+  <script language="javascript" type="text/javascript">
+   newGame('shakespeare', 'tt');
+  </script>
 </body>

@@ -54,7 +54,10 @@ body {
 /* Customize container */
 @media (min-width: 768px) {
   .container {
-    max-width: 730px;
+    /* TODO: Use a wider container, and a narrower
+     * sub-container for TT mode.
+     */
+    max-width: 750px;
   }
 }
 .container-narrow > hr {
@@ -78,15 +81,15 @@ body {
   word-wrap: break-word;
 }
 
-.jumbotron #arena {
+.jumbotron .text {
   font-family: 'Lora', serif;
   font-style: italic;
 }
-.jumbotron #arena::first-letter {
+.jumbotron .text::first-letter {
   font-size: 300%;
 }
 
-.jumbotron #arena::selection {
+.jumbotron .text::selection {
   background-color: #222;
   color: #d9332f;
 }
