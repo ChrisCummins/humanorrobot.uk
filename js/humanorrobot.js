@@ -487,7 +487,9 @@ var newGame = function(game_id, mode) {
     }
 
     // Update GUI
-    var preambleSel = '.' + mode + ' .preamble';
+    var modeSel = '.' + mode;
+    $(modeSel).show();
+    var preambleSel = modeSel + ' .preamble';
     $(preambleSel + ' .title').text(GameState.data.name);
     $(preambleSel + ' .data-src').text(GameState.data.data_src);
     $(preambleSel).show();
