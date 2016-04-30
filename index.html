@@ -33,7 +33,7 @@
       <h3 class="site-header"><span class="human">human</span><span class="or">or</span><span class="robot">robot</span>.<span class="tld">uk</span></h3>
     </div>
 
-    <div class="row scoreboard">
+    <div class="row scoreboard" style="display: none;">
       <div class="col-sm-3">
         <span class="round">Round <span id="round-count">1</span></span>
       </div>
@@ -49,8 +49,24 @@
         <span id="incorrect" class="result">Incorrect!</span>
       </div>
     </div>
-    <div class="jumbotron">
-      <!-- <h1>Shakespeare vs. Robot</h1> -->
+
+
+    <div class="jumbotron preamble">
+      <h3 class="title"></h3>
+      <hr/>
+      <p class="lead">
+        <span class="intro">Loading ...</span>
+        Good Luck!
+      </p>
+      <p class="lead">
+        <strong>Hint:</strong> The first extract is <i>always</i> a human.
+      </p>
+      <p>
+        <a id="start" class="btn decision btn-lg btn-info" href="#" role="button">Start</a>
+      </p>
+    </div>
+
+    <div class="jumbotron arena" style="display:none;">
       <p id="arena" class="lead">
         Loading ...
       </p>

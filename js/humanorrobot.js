@@ -3,6 +3,8 @@
 // TODO: load from an external JSON
 const data = {
     "shakespeare": {
+        "name": "Shakespeare or Robot?",
+        "preamble": "In this game you will be shown a series of texts. Your goal is to determine, for each, whether the text came from a human (William Shakespeare) or a robot.",
         "human": {
             "samples": Extracts['human']
         },
@@ -233,6 +235,17 @@ $('#robot').click(function() {
     newRound();
 });
 
+$('#start').click(function() {
+    $('.preamble').hide();
+    $('.row.scoreboard').show();
+    $('.arena').show();
 
-// TODO: Select from list.
-newGame('shakespeare');
+    newGame('shakespeare');
+});
+
+var startGame = function(game) {
+    $('.preamble .title').text(data[game]['name']);
+    $('.preamble .intro').html(data[game]['preamble']);
+};
+
+startGame('shakespeare');

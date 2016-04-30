@@ -63,14 +63,17 @@ body {
 .jumbotron h1 {
   font-size: 50px;
 }
-.jumbotron .lead {
+.jumbotron p.lead {
   text-align: left;
+  margin-bottom: 1.5em;
+  word-wrap: break-word;
+}
+
+.jumbotron #arena {
   font-family: 'Lora', serif;
   font-style: italic;
-  word-wrap: break-word;
-  margin-bottom: 1.5em;
 }
-.jumbotron .lead::first-letter {
+.jumbotron #arena::first-letter {
   font-size: 300%;
 }
 
