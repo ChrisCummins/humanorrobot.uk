@@ -10,7 +10,10 @@
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
+    <!-- Third party CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+
     <link href='https://fonts.googleapis.com/css?family=Bitter:400,400italic|Lora:400,400italic' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/css/styles.css">
 
@@ -66,7 +69,7 @@
         <strong>Hint:</strong> The first extract is <i>always</i> a human.
       </p>
       <p>
-        <a id="start" class="btn decision btn-lg btn-info" href="#" role="button">Start</a>
+        <a id="start" class="btn decision btn-lg btn-info" href="#" role="button"><i class="fa fa-play" aria-hidden="true"></i> Start</a>
       </p>
     </div>
 
@@ -77,8 +80,14 @@
         Loading ...
       </p>
       <p>
-        <a id="human" class="btn decision btn-lg btn-success" href="#" role="button">Shakespeare</a>
-        <a id="robot" class="btn decision btn-lg btn-danger" href="#" role="button">Robot</a>
+        <a id="human" class="btn decision btn-lg btn-success" href="#" role="button">
+          <i class="fa fa-user" aria-hidden="true"></i>
+          Shakespeare
+        </a>
+        <a id="robot" class="btn decision btn-lg btn-danger" href="#" role="button">
+          <i class="fa fa-cogs" aria-hidden="true"></i>
+          Robot
+        </a>
       </p>
     </div>
   </div> <!-- /container -->
