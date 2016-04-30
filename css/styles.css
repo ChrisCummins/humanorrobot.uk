@@ -72,21 +72,22 @@ body {
 .jumbotron h1 {
   font-size: 50px;
 }
-.jumbotron p.lead {
+
+.jumbotron p.lead,
+.arena p.lead {
   text-align: left;
   margin-bottom: 1.5em;
   word-wrap: break-word;
 }
-
-.jumbotron #arena {
+.arena p.lead {
   font-family: 'Lora', serif;
   font-style: italic;
 }
-.jumbotron #arena::first-letter {
+.arena p.lead::first-letter {
   font-size: 300%;
 }
 
-.jumbotron #arena::selection {
+.arena p.lead::selection {
   background-color: #222;
   color: #d9332f;
 }

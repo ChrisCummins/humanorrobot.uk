@@ -40,6 +40,10 @@
       </h3>
     </div>
 
+    <div id="giveaway" class="tooltipDiv">giveaway</div>
+
+
+    <!-- Game scores -->
     <div class="row scoreboard" style="display: none;">
       <div class="col-sm-3">
         <span class="round">Round <span id="round-count">1</span></span>
@@ -47,7 +51,6 @@
       <div class="col-sm-6 text-center">
         <span class="scores">
           Player: <span id="score-player" class="score">1000</span>,
-          <!-- Shakespeare: <span id="score-human" class="score">1000</span>, -->
           Robot: <span id="score-robot" class="score">1000</span>
         </span>
       </div>
@@ -58,38 +61,69 @@
     </div>
 
 
-    <div class="jumbotron preamble">
-      <h3 class="title"></h3>
-      <hr/>
-      <p class="lead">
-        <span class="intro">Loading ...</span>
-        Good Luck!
-      </p>
-      <p class="lead">
-        <strong>Hint:</strong> The first extract is <i>always</i> a human.
-      </p>
-      <p>
-        <a id="start" class="btn decision btn-lg btn-info" href="#" role="button"><i class="fa fa-play" aria-hidden="true"></i> Start</a>
-      </p>
-    </div>
+    <!-- Turing Test -->
+    <div class="tt">
+      <div class="jumbotron preamble">
+        <h3 class="title"></h3>
+        <hr/>
+        <p class="lead">
+          In this game you will be shown extracts of text. Your role is
+          to determine whether each extract was written by a human or a
+          robot. The human text comes from <span class="data-src"></span>.
+          Good Luck!
+        </p>
+        <p class="lead">
+          <strong>Hint:</strong> The first extract is <i>always</i> written
+          by a human.
+        </p>
+        <p>
+          <a id="start" class="btn decision btn-lg btn-info" href="#" role="button">
+            <i class="fa fa-play" aria-hidden="true"></i>
+            Play
+          </a>
+        </p>
+      </div>  <!-- /.preamble -->
 
-    <div id="giveaway" class="tooltipDiv">giveaway</div>
+      <div class="jumbotron arena" style="display:none;">
+        <p id="arena" class="lead">
+          Loading ...
+        </p>
+        <p>
+          <a id="human" class="btn decision btn-lg btn-success" href="#" role="button">
+            <i class="fa fa-user" aria-hidden="true"></i>
+            Shakespeare
+          </a>
+          <a id="robot" class="btn decision btn-lg btn-danger" href="#" role="button">
+            <i class="fa fa-cogs" aria-hidden="true"></i>
+            Robot
+          </a>
+        </p>
+      </div>  <!-- /.arena -->
+    </div>  <!-- /.tt -->
 
-    <div class="jumbotron arena" style="display:none;">
-      <p id="arena" class="lead">
-        Loading ...
-      </p>
-      <p>
-        <a id="human" class="btn decision btn-lg btn-success" href="#" role="button">
-          <i class="fa fa-user" aria-hidden="true"></i>
-          Shakespeare
-        </a>
-        <a id="robot" class="btn decision btn-lg btn-danger" href="#" role="button">
-          <i class="fa fa-cogs" aria-hidden="true"></i>
-          Robot
-        </a>
-      </p>
-    </div>
+
+    <!-- Head to head mode -->
+    <div class="h2h">
+      <div class="arena col-md-12" style="display:none;">
+        <div class="col-md-6">
+          <p id="arena-a" class="lead">
+            Loading ...
+          </p>
+          <p>
+            <a id="robot" class="btn decision btn-lg btn-danger" href="#" role="button">Robot</a>
+          </p>
+        </div>
+        <div class="col-md-6">
+          <p id="arena-b" class="lead">
+            Loading ...
+          </p>
+          <p>
+            <a id="robot" class="btn decision btn-lg btn-danger" href="#" role="button">Robot</a>
+          </p>
+        </div>
+      </div>  <!-- /.arena -->
+    </div>  <!-- /.h2h -->
+
   </div> <!-- /container -->
 
   <footer class="footer text-center">

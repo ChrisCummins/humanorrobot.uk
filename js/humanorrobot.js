@@ -1,10 +1,11 @@
 // Game data.
 //
 // TODO: load from an external JSON
-const data = {
+const GameData = {
     "shakespeare": {
+        "modes": ["tt", "h2h"],
         "name": "Shakespeare or Robot?",
-        "preamble": "In this game you will be shown a series of texts. Your goal is to determine, for each, whether the text came from a human (William Shakespeare) or a robot.",
+        "data_src": "the writings of William Shakespeare",
         "human": {
             "samples": Extracts['human']
         },
@@ -19,159 +20,177 @@ const data = {
 
 // Mutable game state.
 //
-var state = {
-    'game': null,
-    'round': 0,  // round counter
+var GameState = {
+    'id': null, // game name
+    'mode': null, // supported values: {tt,h2h}
+    'data': null, // GameData[id]
     'scores': {
         'player': 0,
         'human': 0,
         'robot': 0,
         'opponents': {}
     },
-    'gamesPlayed': {
+    'rounds_played': {
+        'player': 0,
         'human': 0,
         'opponents': {}
-    }
-};
-
-// Mutable round state.
-//
-var round = {
-    'ishuman': true,
-    'opponent': null, // Name of robot opponent
-    'extract': null
+    },
+    'round': {}  // mutable round state
 };
 
 
-var newGame = function(game) {
-    var initScore = 1000;
+var newRound_tt = function() {
+    // console.log('DEBUG: newRound_tt()');
 
-    state['game'] = game;
-    state['round'] = 0;
-    state['scores']['player'] = initScore;
-    state['scores']['human'] = initScore;
-    state['scores']['robot'] = initScore;
+    var forceHuman = GameState.rounds_played.player === 0;
 
-    // Populate opponent scores:
-    state['scores']['opponents'] = {};
-    for (var opponent in data[state['game']]['opponents']) {
-        state['scores']['opponents'][opponent] = initScore;
-    }
+    var ishuman = forceHuman ? true : Math.random() < .5;
+    GameState.round.ishuman = ishuman
 
-    state['gamesPlayed']['human'] = 0;
-    state['gamesPlayed']['opponents'] = {};
-    for (var opponent in data[state['game']]['opponents']) {
-        state['gamesPlayed']['opponents'][opponent] = 0;
-    }
-
-    newRound(true);
-};
-
-
-var newRound = function(forceHuman) {
-    state['round'] += 1;
-    displayRound(state['round']);
-
-    round['ishuman'] = forceHuman ? true : Math.random() < .5;
-
-    var nextExtract = ''
-    if (round['ishuman']) {
-        var i = Math.floor(Math.random() * data[state['game']]['human']['samples'].length);
-        nextExtract = data[state['game']]['human']['samples'][i];
-        round['opponent'] = null;
+    // TODO: Remove selected extracts from data
+    if (ishuman) {
+        var i = Math.floor(Math.random() * GameState.data.human.samples.length);
+        GameState.round.extract = GameState.data.human.samples[i];
+        GameState.round.opponent = null;
     } else {
-        var opponents = Object.keys(data[state['game']]['opponents']);
+        var opponents = Object.keys(GameState.data.opponents);
 
         // TODO: Non-uniform opponent selection
         var i = Math.floor(Math.random() * opponents.length);
         var opponent_name = opponents[i];
-        var opponent = data[state['game']]['opponents'][opponent_name];
-        round['opponent'] = opponent_name;
+        GameState.round.opponent = opponent_name;
 
-        // TODO: Remove sample from selection
-        i = Math.floor(Math.random() * opponent['samples'].length);
-        nextExtract = opponent['samples'][i];
+        var opponent = GameState.data.opponents[opponent_name];
+        i = Math.floor(Math.random() * opponent.samples.length);
+        GameState.round.extract = opponent.samples[i];
     }
-    round['extract'] = nextExtract;
-    $('#arena').html(round['extract']);
+    $('#arena').html(GameState.round.extract);
 
-    var msg = 'New round! human: ' + round['ishuman'];
-    if (!round['ishuman'])
-        msg += ', opponent = ' + round['opponent'];
+    var msg = 'New round! human: ' + ishuman;
+    if (!ishuman)
+        msg += ', opponent = ' + GameState.round.opponent;
     console.log(msg);
 };
 
-var playerLostToHuman = function() {
-    var newPlayerScore = Elo.getNewRating(state['scores']['player'], state['scores']['human'], 0);
-    var newHumanScore = Elo.getNewRating(state['scores']['human'], state['scores']['player'], 1);
+var newRound = function() {
+    // console.log('DEBUG: newRound()');
 
-    state['scores']['player'] = newPlayerScore;
-    state['scores']['human'] = newHumanScore;
-    state['gamesPlayed']['human'] += 1;
+    // Update GUI:
+    displayRound(GameState.rounds_played.player + 1);
 
-    displayIncorrect();
+    var fn = window['newRound_' + GameState.mode];
+    if (typeof fn === 'function')
+        fn();
 };
 
-var playerWonAgainstHuman = function() {
-    var newPlayerScore = Elo.getNewRating(state['scores']['player'], state['scores']['human'], 1);
-    var newHumanScore = Elo.getNewRating(state['scores']['human'], state['scores']['player'], 0);
 
-    state['scores']['player'] = newPlayerScore;
-    state['scores']['human'] = newHumanScore;
-    state['gamesPlayed']['human'] += 1;
+//
+// Updates game scores and rounds_played counters.
+//
+var endRound_tt = function(btnId) {
+    var playerLostToHuman = function() {
+        var newPlayerScore = Elo.getNewRating(GameState.scores.player,
+                                              GameState.scores.human, 0);
+        var newHumanScore = Elo.getNewRating(GameState.scores.human,
+                                             GameState.scores.player, 1);
 
-    displayCorrect();
+        GameState.scores.player = newPlayerScore;
+        GameState.scores.human = newHumanScore;
+        GameState.rounds_played.human += 1;
+
+        return false;
+    };
+
+    var playerWonAgainstHuman = function() {
+        var newPlayerScore = Elo.getNewRating(GameState.scores.player,
+                                              GameState.scores.human, 1);
+        var newHumanScore = Elo.getNewRating(GameState.scores.human,
+                                             GameState.scores.player, 0);
+
+        GameState.scores.player = newPlayerScore;
+        GameState.scores.human = newHumanScore;
+        GameState.rounds_played.human += 1;
+
+        return true;
+    };
+
+    var playerLostToRobot = function() {
+        var newPlayerScore = Elo.getNewRating(
+            GameState.scores.player, GameState.scores.robot, 0);
+        var newRobotScore = Elo.getNewRating(
+            GameState.scores.robot, GameState.scores.player, 1);
+        var newOpponentScore = Elo.getNewRating(
+            GameState.scores.opponents[GameState.round.opponent],
+            GameState.scores.player, 1);
+        GameState.scores.opponents[GameState.round.opponent] = newOpponentScore;
+
+        GameState.scores.player = newPlayerScore;
+        GameState.scores.robot = newRobotScore;
+        GameState.rounds_played.opponents[GameState.round.opponent] += 1;
+
+        return false;
+    };
+
+    var playerWonAgainstRobot = function() {
+        var newPlayerScore = Elo.getNewRating(
+            GameState.scores.player, GameState.scores.robot, 1);
+        var newRobotScore = Elo.getNewRating(
+            GameState.scores.robot, GameState.scores.player, 0);
+        var newOpponentScore = Elo.getNewRating(
+            GameState.scores.opponents[GameState.round.opponent],
+            GameState.scores.player, 0);
+        GameState.scores.opponents[GameState.round.opponent] = newOpponentScore;
+
+        GameState.scores.player = newPlayerScore;
+        GameState.scores.robot = newRobotScore;
+        GameState.rounds_played.opponents[GameState.round.opponent] += 1;
+
+        return true;
+    };
+
+    // console.log('DEBUG: endRound_tt()');
+
+    if (btnId === 'human') {
+        if (GameState.round.ishuman)
+            return playerWonAgainstHuman();
+        else
+            return playerLostToRobot();
+    } else if (btnId === 'robot') {
+        if (GameState.round.ishuman)
+            return playerLostToHuman();
+        else
+            return playerWonAgainstRobot();
+    } else {
+        throw 'endRound_tt(): unrecognised btn: ' + btnId;
+    }
 };
 
-var playerLostToRobot = function() {
-    var newPlayerScore = Elo.getNewRating(
-        state['scores']['player'], state['scores']['robot'], 0);
-    var newRobotScore = Elo.getNewRating(
-        state['scores']['robot'], state['scores']['player'], 1);
-    var newOpponentScore = Elo.getNewRating(
-        state['scores']['opponents'][round['opponent']],
-        state['scores']['player'], 1);
-    state['scores']['opponents'][round['opponent']] = newOpponentScore;
+var endRound = function(/* ID of the button pressed: */btnId) {
+    // console.log('DEBUG: endRound()');
 
-    state['scores']['player'] = newPlayerScore;
-    state['scores']['robot'] = newRobotScore;
-    state['gamesPlayed']['opponents'][round['opponent']] += 1;
-
-    displayIncorrect();
-};
-
-var playerWonAgainstRobot = function() {
-    var newPlayerScore = Elo.getNewRating(
-        state['scores']['player'], state['scores']['robot'], 1);
-    var newRobotScore = Elo.getNewRating(
-        state['scores']['robot'], state['scores']['player'], 0);
-    var newOpponentScore = Elo.getNewRating(
-        state['scores']['opponents'][round['opponent']],
-        state['scores']['player'], 0);
-    state['scores']['opponents'][round['opponent']] = newOpponentScore;
-
-    state['scores']['player'] = newPlayerScore;
-    state['scores']['robot'] = newRobotScore;
-    state['gamesPlayed']['opponents'][round['opponent']] += 1;
-
-    displayCorrect();
-};
-
-var endRound = function() {
     var giveaway = getGiveawayText();
     if (giveaway) {
-        var idx = round['extract'].indexOf(giveaway);
+        var idx = RoundState['extract'].indexOf(giveaway);
         console.log('giveaway: ' + giveaway);
         console.log('STARTING AT: ' + idx);
     }
 
-    // reset giveaway:
+    var fn = window['endRound_' + GameState.mode];
+    if (typeof fn === 'function')
+        var playerWon = fn(btnId);
+
+    GameState.rounds_played.player += 1;
+
+    // Reset giveaway:
     document.getSelection().removeAllRanges();
     $('#giveaway').hide();
 
-    displayScores(state['scores']['player'],
-                  state['scores']['human'],
-                  state['scores']['robot']);
+    // Update GUI:
+    displayScores(GameState.scores.player,
+                  GameState.scores.human,
+                  GameState.scores.robot);
+    var displayFeedback = playerWon ? displayCorrect : displayIncorrect;
+    displayFeedback();
 };
 
 var displayCorrect = function() {
@@ -205,7 +224,7 @@ var getSelectionText = function() {
 };
 
 var displayRound = function(round) {
-    $('#round-count').text(round);
+    $('#round_count').text(round);
 };
 
 var displayScores = function(scorePlayer, scoreHuman, scoreRobot) {
@@ -234,13 +253,13 @@ var displayScores = function(scorePlayer, scoreHuman, scoreRobot) {
     }
 
     console.log('Scores: ');
-    console.log('    player = ' + state['scores']['player']);
-    console.log('    human = ' + state['scores']['human'] + ' (' +
-                state['gamesPlayed']['human'] +' rounds)');
-    for (var opponent in data[state['game']]['opponents']) {
+    console.log('    player = ' + GameState.scores.player);
+    console.log('    human = ' + GameState.scores.human + ' (' +
+                GameState.rounds_played.human + ' rounds)');
+    for (var opponent in GameState.data.opponents) {
         console.log('    ' + opponent + ' = ' +
-                    state['scores']['opponents'][opponent] + ' (' +
-                    state['gamesPlayed']['opponents'][opponent] +' rounds)');
+                    GameState.scores.opponents[opponent] + ' (' +
+                    GameState.rounds_played.opponents[opponent] +' rounds)');
     }
 };
 
@@ -250,7 +269,8 @@ var getSelectedText = function() {
     var text = "";
     if (typeof window.getSelection != "undefined") {
         text = window.getSelection().toString();
-    } else if (typeof document.selection != "undefined" && document.selection.type == "Text") {
+    } else if (typeof document.selection != "undefined" &&
+               document.selection.type == "Text") {
         text = document.selection.createRange().text;
     }
     return text;
@@ -275,7 +295,9 @@ var getSelectionParentElement = function() {
 var getGiveawayText = function() {
     var parentEl = getSelectionParentElement();
 
-    if (parentEl && parentEl.id === 'arena')
+    if (parentEl && (parentEl.id === 'arena' ||
+                     parentEl.id === 'arena-a' ||
+                     parentEl.id === 'arena-b'))
         return getSelectedText();
     else
         return null;
@@ -298,37 +320,92 @@ document.onkeyup = giveawayPopoverCb;
 
 
 $('#human').click(function() {
-    if (round['ishuman'])
-        playerWonAgainstHuman();
-    else
-        playerLostToRobot();
-
-    endRound();
+    endRound(this.id);
     newRound();
 });
 
 $('#robot').click(function() {
-
-    if (round['ishuman'])
-        playerLostToHuman();
-    else
-        playerWonAgainstRobot();
-
-    endRound();
+    endRound(this.id);
     newRound();
 });
 
+/*
+ * Callback fired once a user presses the preamble 'start' button.
+ */
 $('#start').click(function() {
-    $('.preamble').hide();
-    $('.row.scoreboard').show();
-    $('.arena').show();
+    // Prepare GUI:
+    $('.scoreboard').show();
+    var modeSel = '.' + GameState.mode;
+    $(modeSel + ' .preamble').hide();
+    $(modeSel + ' .arena').show();
 
-    newGame('shakespeare');
+    newRound();
 });
 
-var startGame = function(game) {
-    $('.preamble .title').text(data[game]['name']);
-    $('.preamble .intro').html(data[game]['preamble']);
+
+var newGame_tt = function() {
+    // console.log('DEBUG: newGame_tt()');
+
+    GameState.round.ishuman = true;
+    GameState.round.opponent = null;
+    GameState.round.extract = null;
 };
 
-startGame('shakespeare');
+
+var newGame = function(game_id, mode) {
+    // console.log('DEBUG: newGame()');
+
+    game_id = game_id || 'shakespeare';
+    mode = mode || 'tt';
+
+    // Hide game elements:
+    $('.scoreboard, .preamble, .arena').hide();
+
+    if (!GameData[game_id])
+        throw 'Invalid game id: ' + game_id;
+    if (GameData[game_id].modes.indexOf(mode) < 0)
+        throw 'Invalid game mode: ' + mode;
+
+    var initScore = 1000;
+
+    // Create Game state:
+    GameState = {
+        'id': game_id,
+        'mode': mode,
+        'data': GameData[game_id],
+        'scores': {
+            'player': initScore,
+            'human': initScore,
+            'robot': initScore,
+            'opponents': {}
+        },
+        'rounds_played': {
+            'player': 0,
+            'human': 0,
+            'opponents': {}
+        },
+        'round': {}
+    }
+
+    for (var opponent in GameState.data.opponents) {
+        GameState.scores.opponents[opponent] = initScore;
+        GameState.rounds_played.opponents[opponent] = 0;
+    }
+
+    // Update GUI
+    var preambleSel = '.' + mode + ' .preamble';
+    $(preambleSel + ' .title').text(GameState.data.name);
+    $(preambleSel + ' .data-src').text(GameState.data.data_src);
+    $(preambleSel).show();
+
+    // Run mode-specific game set up, if there is one.
+    var fn = window['newGame_' + mode];
+    if (typeof fn === 'function')
+        fn();
+};
+
+
+var main = function() {
+    newGame('shakespeare', 'tt');
+};
+main();
