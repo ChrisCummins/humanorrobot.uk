@@ -168,14 +168,22 @@ var playerWonAgainstRobot = function() {
 };
 
 var displayCorrect = function() {
+    $('#correct').stop();
+    $('#incorrect').stop();
+
     $('#incorrect').hide();
     $('#correct').show();
+    $('#correct').css('opacity', 1.0);
     $('#correct').fadeOut(2000);
 };
 
 var displayIncorrect = function() {
+    $('#correct').stop();
+    $('#incorrect').stop();
+
     $('#correct').hide();
     $('#incorrect').show();
+    $('#incorrect').css('opacity', 1.0);
     $('#incorrect').fadeOut(2000);
 };
 
