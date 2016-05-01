@@ -2,8 +2,8 @@
 var santizeModeName = function(mode) {
     if (mode === 'tt')
         return 'NITT';
-    else if (mode === 'h2h')
-        return 'Head to Head';
+    else if (mode === 'abt')
+        return 'ABT';
     else
         return mode;
 };
@@ -14,7 +14,7 @@ var santizeModeName = function(mode) {
 const GameData = {
     "shakespeare": {
         "description": "The complete writings of William Shakespeare",
-        "modes": ["tt", "h2h"],
+        "modes": ["tt", "abt"],
         "name": "William Shakespeare",
         "data_src": "the writings of William Shakespeare",
         "human": {
@@ -33,7 +33,7 @@ const GameData = {
 //
 var GameState = {
     'id': null, // game name
-    'mode': null, // supported values: {tt,h2h}
+    'mode': null, // supported values: {tt,abt}
     'data': null, // GameData[id]
     'scores': {
         'player': 0,
@@ -50,8 +50,8 @@ var GameState = {
 };
 
 
-var newRound_h2h = function() {
-    // console.log('DEBUG: newRound_h2h()');
+var newRound_abt = function() {
+    // console.log('DEBUG: newRound_abt()');
 
     var forcehumanisA = GameState.rounds_played.player === 0;
     var humanisA = forcehumanisA ? true : Math.random() < .5;
@@ -208,7 +208,7 @@ var endRound_tt = function(btnId) {
 };
 
 
-var endRound_h2h = function(btnId) {
+var endRound_abt = function(btnId) {
     var playerLost = function() {
         var newPlayerScore = Elo.getNewRating(
             GameState.scores.player, GameState.scores.robot, 0);
@@ -243,7 +243,7 @@ var endRound_h2h = function(btnId) {
         return true;
     };
 
-    // console.log('DEBUG: endRound_h2h()');
+    // console.log('DEBUG: endRound_abt()');
 
     if (btnId === 'is-a-btn') {
         if (GameState.round.humanisA)
@@ -256,7 +256,7 @@ var endRound_h2h = function(btnId) {
         else
             return playerLost();
     } else {
-        throw 'endRound_h2h(): unrecognised btn: ' + btnId;
+        throw 'endRound_abt(): unrecognised btn: ' + btnId;
     }
 };
 
@@ -447,8 +447,8 @@ var newGame_tt = function() {
 };
 
 
-var newGame_h2h = function() {
-    // console.log('DEBUG: newGame_h2h()');
+var newGame_abt = function() {
+    // console.log('DEBUG: newGame_abt()');
 
     GameState.round.humanisA = true;
     GameState.round.opponent = null;
