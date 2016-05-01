@@ -134,11 +134,11 @@ def get_artifacts_from_file(inpath, mode="literature", num_artifacts=300):
 
 
 def get_opencl_game():
-    human = get_artifacts_from_file('cl/human.txt', mode="cl")
-    alpha = get_artifacts_from_file('cl/alpha.txt', mode="cl")
-    bravo = get_artifacts_from_file('cl/bravo.txt', mode="cl")
-    charlie = get_artifacts_from_file('cl/charlie.txt', mode="cl")
-    delta = get_artifacts_from_file('cl/delta.txt', mode="cl")
+    human = get_artifacts_from_file('opencl/human.txt', mode="cl")
+    alpha = get_artifacts_from_file('opencl/alpha.txt', mode="cl")
+    bravo = get_artifacts_from_file('opencl/bravo.txt', mode="cl")
+    charlie = get_artifacts_from_file('opencl/charlie.txt', mode="cl")
+    delta = get_artifacts_from_file('opencl/delta.txt', mode="cl")
 
     data = {
         "name": "Programming: OpenCL kernels",
@@ -159,11 +159,16 @@ def get_opencl_game():
 
 
 def get_shakespeare_game():
-    human = get_artifacts_from_file('sh/human.txt', mode="literature")
-    alpha = get_artifacts_from_file('sh/sample1.txt', mode="literature")
-    bravo = get_artifacts_from_file('sh/sample2.txt', mode="literature")
-    charlie = get_artifacts_from_file('sh/sample3.txt', mode="literature")
-    charlie = get_artifacts_from_file('sh/sample4.txt', mode="literature")
+    human = get_artifacts_from_file('shakespeare/human.txt',
+                                    mode="literature")
+    alpha = get_artifacts_from_file('shakespeare/sample1.txt',
+                                    mode="literature")
+    bravo = get_artifacts_from_file('shakespeare/sample2.txt',
+                                    mode="literature")
+    charlie = get_artifacts_from_file('shakespeare/sample3.txt',
+                                      mode="literature")
+    charlie = get_artifacts_from_file('shakespeare/sample4.txt',
+                                      mode="literature")
 
     data = {
         "name": "Literature: Shakespeare",
