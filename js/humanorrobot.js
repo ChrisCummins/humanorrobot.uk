@@ -18,27 +18,6 @@ var sanitizeModeName = function(mode, longName) {
     }
 };
 
-// Game data.
-//
-// TODO: load from an external JSON
-const GameData = {
-    "shakespeare": {
-        "name": "Literature: Shakespeare",
-        "description": "The complete writings of William Shakespeare",
-        "modes": ["nitt", "abt", "rabt"],
-        "artifact_type": "literature",
-        "data_src": "the writings of William Shakespeare",
-        "human": {
-            "samples": Extracts['human']
-        },
-        "opponents": {
-            "alpha": { "samples": Extracts['alpha'] },
-            "bravo": { "samples": Extracts['bravo'] },
-            "charlie": { "samples": Extracts['charlie'] },
-            "delta": { "samples": Extracts['delta'] }
-        }
-    }
-};
 
 // Mutable game state.
 //
