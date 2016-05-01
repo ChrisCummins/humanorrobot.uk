@@ -66,13 +66,21 @@ body {
 .jumbotron h1 {
   font-size: 50px;
 }
-.jumbotron p.lead {
-  text-align: left;
-  margin-bottom: 1.5em;
-  word-wrap: break-word;
-}
 
 /* Arena formatting: */
+.arena .artifact {
+  text-align: left;
+  margin-bottom: 2em;
+  word-wrap: break-word;
+  font-size: 125%;
+
+  /* word wrapping for <pre> tag: */
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
 .arena .artifact::selection {  /* giveaway */
   background-color: #222;
   color: #d9332f;
@@ -86,7 +94,8 @@ body {
   font-size: 300%;
 }
 
-.arena .artifact.code {  /* literature */
+.arena .artifact.code {  /* source code */
+  font-size: 105%;
   font-family: 'Ubuntu Mono';
 }
 

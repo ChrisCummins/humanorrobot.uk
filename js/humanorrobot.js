@@ -45,9 +45,11 @@ var newRound_abt = function() {
 
     var forcehumanisA = GameState.rounds_played.player === 0;
     var humanisA = forcehumanisA ? true : Math.random() < .5;
+    GameState.round.humanisA = humanisA;
 
     var i = Math.floor(Math.random() * GameState.data.human.samples.length);
     var nextHumanExtract = GameState.data.human.samples[i];
+    GameState.data.human.samples.splice(i, 1);
 
     var opponents = Object.keys(GameState.data.opponents);
 
@@ -59,6 +61,7 @@ var newRound_abt = function() {
     var opponent = GameState.data.opponents[opponent_name];
     i = Math.floor(Math.random() * opponent.samples.length);
     var nextRobotExtract = opponent.samples[i];
+    opponent.samples.splice(i, 1);
 
     var nextA = humanisA ? nextHumanExtract : nextRobotExtract;
     var nextB = humanisA ? nextRobotExtract : nextHumanExtract;
@@ -88,6 +91,7 @@ var newRound_rabt = function() {
     // Extract A:
     i = Math.floor(Math.random() * opponent.samples.length);
     var opponentA_sample = opponent.samples[i];
+    opponent.samples.splice(i, 1);
     GameState.round.extractA = opponentA_sample;
 
     // Opponent B:
@@ -99,6 +103,7 @@ var newRound_rabt = function() {
     // Extract B:
     i = Math.floor(Math.random() * opponent.samples.length);
     var opponentB_sample = opponent.samples[i];
+    opponent.samples.splice(i, 1);
     GameState.round.extractB = opponentB_sample;
 
     $('.rabt-arena-a').html(GameState.round.extractA);
@@ -121,6 +126,7 @@ var newRound_nitt = function() {
     if (ishuman) {
         var i = Math.floor(Math.random() * GameState.data.human.samples.length);
         GameState.round.extract = GameState.data.human.samples[i];
+        GameState.data.human.samples.splice(i, 1);
         GameState.round.opponent = null;
     } else {
         var opponents = Object.keys(GameState.data.opponents);
@@ -133,6 +139,7 @@ var newRound_nitt = function() {
         var opponent = GameState.data.opponents[opponent_name];
         i = Math.floor(Math.random() * opponent.samples.length);
         GameState.round.extract = opponent.samples[i];
+        opponent.samples.splice(i, 1);
     }
     $('#arena').html(GameState.round.extract);
 
