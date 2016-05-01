@@ -1,11 +1,21 @@
 // Convert mode name into human-readable form.
-var sanitizeModeName = function(mode) {
-    if (mode === 'tt')
-        return 'NITT';
-    else if (mode === 'abt')
-        return 'ABT';
-    else
-        return mode;
+var sanitizeModeName = function(mode, longName) {
+    longName = longName || false;
+
+    switch(mode) {
+    case 'nitt':
+        return longName ? 'Non-Interactive Turing Test ' : 'NITT';
+    case 'abt':
+        return longName ? 'A/B Test' : 'ABT';
+    case 'aat':
+        return longName ? 'A/A Test': 'AAT';
+    case 'rabt':
+        return longName ? 'Robot-only A/B Test' : 'RABT';
+    case 'raat':
+        return longName ? 'Robot-only A/A Test' : 'RABT';
+    default:
+        throw 'Unrecognised mode_id: ' + mode;
+    }
 };
 
 // Game data.
@@ -13,9 +23,10 @@ var sanitizeModeName = function(mode) {
 // TODO: load from an external JSON
 const GameData = {
     "shakespeare": {
+        "name": "Literature: Shakespeare",
         "description": "The complete writings of William Shakespeare",
-        "modes": ["tt", "abt"],
-        "name": "William Shakespeare",
+        "modes": ["nitt", "abt"],
+        "artifact_type": "literature",
         "data_src": "the writings of William Shakespeare",
         "human": {
             "samples": Extracts['human']
@@ -33,7 +44,7 @@ const GameData = {
 //
 var GameState = {
     'id': null, // game name
-    'mode': null, // supported values: {tt,abt}
+    'mode': null, // supported values: {nitt,abt,att,rabt,ratt}
     'data': null, // GameData[id]
     'scores': {
         'player': 0,
@@ -81,8 +92,8 @@ var newRound_abt = function() {
 };
 
 
-var newRound_tt = function() {
-    // console.log('DEBUG: newRound_tt()');
+var newRound_nitt = function() {
+    // console.log('DEBUG: newRound_nitt()');
 
     var forceHuman = GameState.rounds_played.player === 0;
 
@@ -129,7 +140,7 @@ var newRound = function() {
 //
 // Updates game scores and rounds_played counters.
 //
-var endRound_tt = function(btnId) {
+var endRound_nitt = function(btnId) {
     var playerLostToHuman = function() {
         var newPlayerScore = Elo.getNewRating(GameState.scores.player,
                                               GameState.scores.human, 0);
@@ -190,7 +201,7 @@ var endRound_tt = function(btnId) {
         return true;
     };
 
-    // console.log('DEBUG: endRound_tt()');
+    // console.log('DEBUG: endRound_nitt()');
 
     if (btnId === 'human') {
         if (GameState.round.ishuman)
@@ -203,7 +214,7 @@ var endRound_tt = function(btnId) {
         else
             return playerWonAgainstRobot();
     } else {
-        throw 'endRound_tt(): unrecognised btn: ' + btnId;
+        throw 'endRound_nitt(): unrecognised btn: ' + btnId;
     }
 };
 
@@ -438,8 +449,8 @@ $('.game-start-btn').click(function() {
 });
 
 
-var newGame_tt = function() {
-    // console.log('DEBUG: newGame_tt()');
+var newGame_nitt = function() {
+    // console.log('DEBUG: newGame_nitt()');
 
     GameState.round.ishuman = true;
     GameState.round.opponent = null;
@@ -461,7 +472,7 @@ var newGame = function(game_id, mode) {
     // console.log('DEBUG: newGame()');
 
     game_id = game_id || 'shakespeare';
-    mode = mode || 'tt';
+    mode = mode || 'nitt';
 
     // Hide game elements:
     $('.scoreboard, .preamble, .arena').hide();
@@ -501,8 +512,7 @@ var newGame = function(game_id, mode) {
     var modeSel = '.' + mode;
     $(modeSel).show();
     var preambleSel = modeSel + ' .preamble';
-    $(preambleSel + ' .title').text(GameState.data.name
-                                    + ' - ' + sanitizeModeName(mode));
+    $(preambleSel + ' .title').text(sanitizeModeName(mode, true));
     $(preambleSel + ' .data-src').text(GameState.data.data_src);
     $(preambleSel).show();
 
