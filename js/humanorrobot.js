@@ -1,5 +1,5 @@
 // Convert mode name into human-readable form.
-var santizeModeName = function(mode) {
+var sanitizeModeName = function(mode) {
     if (mode === 'tt')
         return 'NITT';
     else if (mode === 'abt')
@@ -501,7 +501,8 @@ var newGame = function(game_id, mode) {
     var modeSel = '.' + mode;
     $(modeSel).show();
     var preambleSel = modeSel + ' .preamble';
-    $(preambleSel + ' .title').text(GameState.data.name);
+    $(preambleSel + ' .title').text(GameState.data.name
+                                    + ' - ' + sanitizeModeName(mode));
     $(preambleSel + ' .data-src').text(GameState.data.data_src);
     $(preambleSel).show();
 
