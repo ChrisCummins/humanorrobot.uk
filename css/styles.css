@@ -72,17 +72,22 @@ body {
   word-wrap: break-word;
 }
 
-.jumbotron .text {
+/* Arena formatting: */
+.arena .artifact::selection {  /* giveaway */
+  background-color: #222;
+  color: #d9332f;
+}
+
+.arena .artifact.literature {  /* literature */
   font-family: 'Lora', serif;
   font-style: italic;
 }
-.jumbotron .text::first-letter {
+.arena .artifact.literature::first-letter {
   font-size: 300%;
 }
 
-.jumbotron .text::selection {
-  background-color: #222;
-  color: #d9332f;
+.arena .artifact.code {  /* literature */
+  font-family: 'Ubuntu Mono';
 }
 
 .tooltipDiv {

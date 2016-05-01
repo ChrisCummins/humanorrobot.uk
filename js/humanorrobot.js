@@ -626,6 +626,9 @@ var newGame = function(game_id, mode) {
         GameState.rounds_played.opponents[opponent] = 0;
     }
 
+    // Set arena GUI formatting:
+    $('.artifact').addClass(GameState.data.artifact_type);
+
     // Update GUI
     var modeSel = '.' + mode;
     $(modeSel).show();
