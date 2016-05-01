@@ -25,7 +25,7 @@ const GameData = {
     "shakespeare": {
         "name": "Literature: Shakespeare",
         "description": "The complete writings of William Shakespeare",
-        "modes": ["nitt", "abt"],
+        "modes": ["nitt", "abt", "rabt"],
         "artifact_type": "literature",
         "data_src": "the writings of William Shakespeare",
         "human": {
@@ -89,6 +89,44 @@ var newRound_abt = function() {
 
     console.log('New round! human on left: ' + humanisA +
                 ', opponent = ' + opponent_name);
+};
+
+
+var newRound_rabt = function() {
+    console.log('DEBUG: newRound_rabt()');
+
+    var opponents = Object.keys(GameState.data.opponents);
+
+    // TODO: Non-uniform opponent selection
+
+    // Opponent A:
+    var i = Math.floor(Math.random() * opponents.length);
+    var opponentA_name = opponents[i];
+    GameState.round.opponentA = opponentA_name;
+    opponents.splice(i, 1);  // Remove opponent from list.
+    var opponent = GameState.data.opponents[opponentA_name];
+
+    // Extract A:
+    i = Math.floor(Math.random() * opponent.samples.length);
+    var opponentA_sample = opponent.samples[i];
+    GameState.round.extractA = opponentA_sample;
+
+    // Opponent B:
+    i = Math.floor(Math.random() * opponents.length);
+    var opponentB_name = opponents[i];
+    GameState.round.opponentB = opponentB_name;
+    opponent = GameState.data.opponents[opponentB_name];
+
+    // Extract B:
+    i = Math.floor(Math.random() * opponent.samples.length);
+    var opponentB_sample = opponent.samples[i];
+    GameState.round.extractB = opponentB_sample;
+
+    $('.rabt-arena-a').html(GameState.round.extractA);
+    $('.rabt-arena-b').html(GameState.round.extractB);
+
+    console.log('New round! left = ' + GameState.round.opponentA +
+                ', right = ' + GameState.round.opponentB);
 };
 
 
@@ -271,6 +309,71 @@ var endRound_abt = function(btnId) {
     }
 };
 
+
+var endRound_rabt = function(btnId) {
+    var playerLost = function() {
+        var newPlayerScore = Elo.getNewRating(
+            GameState.scores.player, GameState.scores.robot, 0);
+        var newRobotScore = Elo.getNewRating(
+            GameState.scores.robot, GameState.scores.player, 1);
+        var newOpponentScore = Elo.getNewRating(
+            GameState.scores.opponents[GameState.round.opponent],
+            GameState.scores.player, 1);
+        GameState.scores.opponents[GameState.round.opponent] = newOpponentScore;
+
+        GameState.scores.player = newPlayerScore;
+        GameState.scores.robot = newRobotScore;
+        GameState.rounds_played.opponents[GameState.round.opponent] += 1;
+
+        return false;
+    };
+
+    var playerWon = function() {
+        var newPlayerScore = Elo.getNewRating(
+            GameState.scores.player, GameState.scores.robot, 1);
+        var newRobotScore = Elo.getNewRating(
+            GameState.scores.robot, GameState.scores.player, 0);
+        var newOpponentScore = Elo.getNewRating(
+            GameState.scores.opponents[GameState.round.opponent],
+            GameState.scores.player, 0);
+        GameState.scores.opponents[GameState.round.opponent] = newOpponentScore;
+
+        GameState.scores.player = newPlayerScore;
+        GameState.scores.robot = newRobotScore;
+        GameState.rounds_played.opponents[GameState.round.opponent] += 1;
+
+        return true;
+    };
+
+    console.log('DEBUG: endRound_rabt()');
+
+    var opA = GameState.round.opponentA;
+    var opB = GameState.round.opponentB;
+
+    if (btnId === 'is-a-btn') {
+        var newAScore = Elo.getNewRating(
+            GameState.scores.opponents[opA],
+            GameState.scores.opponents[opB], 1);
+        var newBScore = Elo.getNewRating(
+            GameState.scores.opponents[opB],
+            GameState.scores.opponents[opA], 0);
+    } else if (btnId === 'is-b-btn') {
+        var newAScore = Elo.getNewRating(
+            GameState.scores.opponents[opA],
+            GameState.scores.opponents[opB], 0);
+        var newBScore = Elo.getNewRating(
+            GameState.scores.opponents[opB],
+            GameState.scores.opponents[opA], 1);
+    } else {
+        throw 'endRound_rabt(): unrecognised btn: ' + btnId;
+    }
+
+    GameState.scores.opponents[opA] = newAScore;
+    GameState.scores.opponents[opB] = newBScore;
+
+    return null; // Non-competitive game, no feedback to show.
+};
+
 var endRound = function(/* ID of the button pressed: */btnId) {
     // console.log('DEBUG: endRound()');
 
@@ -299,8 +402,14 @@ var endRound = function(/* ID of the button pressed: */btnId) {
     displayScores(GameState.scores.player,
                   GameState.scores.human,
                   GameState.scores.robot);
-    var displayFeedback = playerWon ? displayCorrect : displayIncorrect;
-    displayFeedback();
+
+    if (playerWon !== null) {
+        var displayFeedback = playerWon ? displayCorrect : displayIncorrect;
+        displayFeedback();
+    }
+
+    // TODO: Pause before proceeding to next round.
+    newRound();
 };
 
 var displayCorrect = function() {
@@ -429,9 +538,8 @@ document.onmouseup = giveawayPopoverCb;
 document.onkeyup = giveawayPopoverCb;
 
 
-$('#human, #robot, #is-a-btn, #is-b-btn').click(function() {
+$('.game-end-rnd-btn').click(function() {
     endRound(this.id);
-    newRound();
 });
 
 
@@ -463,6 +571,16 @@ var newGame_abt = function() {
 
     GameState.round.humanisA = true;
     GameState.round.opponent = null;
+    GameState.round.extractA = null;
+    GameState.round.extractB = null;
+};
+
+
+var newGame_rabt = function() {
+    console.log('DEBUG: newGame_rabt()');
+
+    GameState.round.opponentA = null;
+    GameState.round.opponentB = null;
     GameState.round.extractA = null;
     GameState.round.extractB = null;
 };

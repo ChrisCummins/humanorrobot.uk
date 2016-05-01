@@ -109,9 +109,12 @@
        for (var i in data.modes) {
            var mode = data.modes[i];
            var url = '/game/?g=' + game_id + '&m=' + mode;
+           var btnClass = mode[0] == 'r' ? 'warning' : 'success';
+
            gameHTML += '    <a href="' + url + '" type="button" '
-                     + '     class="btn btn-lg btn-success" title="'
-                      +      sanitizeModeName(mode, true) + '">'
+                     + '     class="btn btn-lg btn-' + btnClass
+                     +       '" title="'
+                     +       sanitizeModeName(mode, true) + '">'
                      +       sanitizeModeName(mode) + '</a> ';
        }
        gameHTML += '  </div>'

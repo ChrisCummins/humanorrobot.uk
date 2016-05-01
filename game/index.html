@@ -95,11 +95,11 @@
               Loading ...
             </p>
             <p>
-              <a id="human" class="btn decision btn-lg btn-success" href="#" role="button">
+              <a id="human" class="btn decision btn-lg btn-success game-end-rnd-btn" href="#" role="button">
                 <i class="fa fa-user" aria-hidden="true"></i>
                 Shakespeare
               </a>
-              <a id="robot" class="btn decision btn-lg btn-danger" href="#" role="button">
+              <a id="robot" class="btn decision btn-lg btn-danger game-end-rnd-btn" href="#" role="button">
                 <i class="fa fa-cogs" aria-hidden="true"></i>
                 Robot
               </a>
@@ -144,7 +144,7 @@
               Loading ...
             </p>
             <p>
-              <a id="is-a-btn" class="btn decision btn-lg btn-danger" href="#" role="button">
+              <a id="is-a-btn" class="btn decision btn-lg btn-danger game-end-rnd-btn" href="#" role="button">
                 <i class="fa fa-cogs" aria-hidden="true"></i>
                 This side is the Robot
               </a>
@@ -155,7 +155,7 @@
               Loading ...
             </p>
             <p>
-              <a id="is-b-btn" class="btn decision btn-lg btn-danger" href="#" role="button">
+              <a id="is-b-btn" class="btn decision btn-lg btn-danger game-end-rnd-btn" href="#" role="button">
                 <i class="fa fa-cogs" aria-hidden="true"></i>
                 This side is the Robot
               </a>
@@ -163,6 +163,56 @@
           </div>
         </div>  <!-- /.arena -->
       </div>  <!-- /.abt -->
+    </div> <!-- /.game -->
+
+    <!-- Robot-only A/B Test -->
+    <div class="game row">
+      <div class="rabt" style="display: none;">
+        <div class="preamble">
+          <div class="col-md-3"></div>
+          <div class="jumbotron col-md-6">
+            <h3 class="title"></h3>
+            <hr/>
+            <p class="lead">
+              This is an non-competitive game in which you be shown
+              two extracts of text, side by side. Your role is to
+              determine which of the two appears more
+              human-like. Enjoy!
+            </p>
+            <p>
+              <a class="btn decision btn-lg btn-info game-start-btn" href="#" role="button">
+                <i class="fa fa-play" aria-hidden="true"></i>
+                Play
+              </a>
+            </p>
+          </div>
+        </div>  <!-- /.preamble -->
+
+        <div class="arena col-md-12" style="display:none;">
+          <div class="jumbotron col-md-6">
+            <p class="lead text rabt-arena-a">
+              Loading ...
+            </p>
+            <p>
+              <a id="is-a-btn" class="btn decision btn-lg btn-success game-end-rnd-btn" href="#" role="button">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                This is more human-like
+              </a>
+            </p>
+          </div>
+          <div class="jumbotron col-md-6">
+            <p id="arena-b" class="lead text rabt-arena-b">
+              Loading ...
+            </p>
+            <p>
+              <a id="is-b-btn" class="btn decision btn-lg btn-success game-end-rnd-btn" href="#" role="button">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                This is more human-like
+              </a>
+            </p>
+          </div>
+        </div>  <!-- /.arena -->
+      </div>  <!-- /.rabt -->
     </div> <!-- /.game -->
 
   </div> <!-- /container -->
