@@ -1,10 +1,21 @@
+// Convert mode name into human-readable form.
+var santizeModeName = function(mode) {
+    if (mode === 'tt')
+        return 'NITT';
+    else if (mode === 'h2h')
+        return 'Head to Head';
+    else
+        return mode;
+};
+
 // Game data.
 //
 // TODO: load from an external JSON
 const GameData = {
     "shakespeare": {
+        "description": "The complete writings of William Shakespeare",
         "modes": ["tt", "h2h"],
-        "name": "Shakespeare or Robot?",
+        "name": "William Shakespeare",
         "data_src": "the writings of William Shakespeare",
         "human": {
             "samples": Extracts['human']
