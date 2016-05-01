@@ -67,6 +67,10 @@ body {
   font-size: 50px;
 }
 
+.preamble p.lead {
+  text-align: left;
+}
+
 /* Arena formatting: */
 .arena .artifact {
   text-align: left;
