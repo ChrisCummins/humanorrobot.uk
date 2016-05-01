@@ -62,8 +62,8 @@ def get_lit_kernels(s, n):
 
 min_kern_charlen = 100
 min_kern_lines = 4
-max_kern_charlen = 750
-max_kern_lines = 50
+max_kern_charlen = 1000
+max_kern_lines = 25
 
 def get_cl_kernels(s, n):
     truncated_artifacts_count = 0
