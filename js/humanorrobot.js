@@ -40,6 +40,34 @@ var GameState = {
 };
 
 
+//
+// Given a list of opponent names, select the next opponent to compete
+// against. The higher the opponent's score, the greater the chance of
+// them being selected.
+//
+var nextOpponent = function(opponents) {
+    opponents = opponents || Object.keys(GameState.data.opponents);
+    var k, opponent;
+
+    var sumScores = 0;
+    for (k in opponents) {
+        opponent = opponents[k];
+        sumScores += GameState.scores.opponents[opponent];
+    }
+
+    var i = Math.floor(Math.random() * sumScores);
+    var j = 0;
+    for (k in opponents) {
+        opponent = opponents[k];
+        j += GameState.scores.opponents[opponent];
+        if (j >= i)
+            break;
+    }
+
+    return opponent;
+};
+
+
 var newRound_abt = function() {
     // console.log('DEBUG: newRound_abt()');
 
@@ -51,11 +79,7 @@ var newRound_abt = function() {
     var nextHumanExtract = GameState.data.human.samples[i];
     GameState.data.human.samples.splice(i, 1);
 
-    var opponents = Object.keys(GameState.data.opponents);
-
-    // TODO: Non-uniform opponent selection
-    i = Math.floor(Math.random() * opponents.length);
-    var opponent_name = opponents[i];
+    var opponent_name = nextOpponent();
     GameState.round.opponent = opponent_name;
 
     var opponent = GameState.data.opponents[opponent_name];
@@ -75,16 +99,14 @@ var newRound_abt = function() {
 
 
 var newRound_rabt = function() {
-    console.log('DEBUG: newRound_rabt()');
+    // console.log('DEBUG: newRound_rabt()');
 
     var opponents = Object.keys(GameState.data.opponents);
 
-    // TODO: Non-uniform opponent selection
-
     // Opponent A:
-    var i = Math.floor(Math.random() * opponents.length);
-    var opponentA_name = opponents[i];
+    var opponentA_name = nextOpponent(opponents);
     GameState.round.opponentA = opponentA_name;
+    var i = opponents.indexOf(opponentA_name);
     opponents.splice(i, 1);  // Remove opponent from list.
     var opponent = GameState.data.opponents[opponentA_name];
 
@@ -95,8 +117,7 @@ var newRound_rabt = function() {
     GameState.round.extractA = opponentA_sample;
 
     // Opponent B:
-    i = Math.floor(Math.random() * opponents.length);
-    var opponentB_name = opponents[i];
+    var opponentB_name = nextOpponent(opponents);
     GameState.round.opponentB = opponentB_name;
     opponent = GameState.data.opponents[opponentB_name];
 
@@ -132,8 +153,7 @@ var newRound_nitt = function() {
         var opponents = Object.keys(GameState.data.opponents);
 
         // TODO: Non-uniform opponent selection
-        var i = Math.floor(Math.random() * opponents.length);
-        var opponent_name = opponents[i];
+        var opponent_name = nextOpponent();
         GameState.round.opponent = opponent_name;
 
         var opponent = GameState.data.opponents[opponent_name];
@@ -148,6 +168,7 @@ var newRound_nitt = function() {
         msg += ', opponent = ' + GameState.round.opponent;
     console.log(msg);
 };
+
 
 var newRound = function() {
     // console.log('DEBUG: newRound()');
@@ -331,7 +352,7 @@ var endRound_rabt = function(btnId) {
         return true;
     };
 
-    console.log('DEBUG: endRound_rabt()');
+    // console.log('DEBUG: endRound_rabt()');
 
     var opA = GameState.round.opponentA;
     var opB = GameState.round.opponentB;
@@ -563,7 +584,7 @@ var newGame_abt = function() {
 
 
 var newGame_rabt = function() {
-    console.log('DEBUG: newGame_rabt()');
+    // console.log('DEBUG: newGame_rabt()');
 
     GameState.round.opponentA = null;
     GameState.round.opponentB = null;
