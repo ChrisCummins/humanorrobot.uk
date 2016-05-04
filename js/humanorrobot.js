@@ -157,7 +157,6 @@ var newRound_nitt = function() {
     var ishuman = forceHuman ? true : Math.random() < .5;
     GameState.round.ishuman = ishuman
 
-    // TODO: Remove selected extracts from data
     if (ishuman) {
         var i = Math.floor(Math.random() * GameState.data.human.samples.length);
         GameState.round.extract = GameState.data.human.samples[i];
@@ -166,7 +165,6 @@ var newRound_nitt = function() {
     } else {
         var opponents = Object.keys(GameState.data.opponents);
 
-        // TODO: Non-uniform opponent selection
         var opponent_name = nextOpponent();
         GameState.round.opponent = opponent_name;
 
@@ -717,7 +715,8 @@ var initAnalytics = function() {
                         labelString: 'Rounds Played'
                     },
                     ticks: {
-                        min: 0
+                        min: 0,
+                        suggestedMax: 3
                     }
                 }]
             },
