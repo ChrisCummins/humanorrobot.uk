@@ -161,13 +161,13 @@ def get_opencl_game():
 def get_shakespeare_game():
     human = get_artifacts_from_file('shakespeare/human.txt',
                                     mode="literature")
-    alpha = get_artifacts_from_file('shakespeare/sample1.txt',
+    romeo = get_artifacts_from_file('shakespeare/sample1.txt',
                                     mode="literature")
-    bravo = get_artifacts_from_file('shakespeare/sample2.txt',
-                                    mode="literature")
-    charlie = get_artifacts_from_file('shakespeare/sample3.txt',
-                                      mode="literature")
-    charlie = get_artifacts_from_file('shakespeare/sample4.txt',
+    juliet = get_artifacts_from_file('shakespeare/sample2.txt',
+                                     mode="literature")
+    montague = get_artifacts_from_file('shakespeare/sample3.txt',
+                                       mode="literature")
+    capulet = get_artifacts_from_file('shakespeare/sample4.txt',
                                       mode="literature")
 
     data = {
@@ -178,8 +178,10 @@ def get_shakespeare_game():
         "data_src": "the writings of William Shakespeare",
         "human": { "samples": human },
         "opponents": {
-            "bravo": { "samples": bravo },
-            "charlie": { "samples": charlie },
+            "Romeo": { "samples": romeo },
+            "Juliet": { "samples": juliet },
+            "Montague": { "samples": montague },
+            "Capulet": { "samples": capulet }
         }
     }
 
