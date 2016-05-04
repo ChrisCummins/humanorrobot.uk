@@ -19,6 +19,18 @@ var sanitizeModeName = function(mode, longName) {
 };
 
 
+var randomColorFactor = function() {
+    return Math.round(Math.random() * 255);
+};
+
+
+var randomColor = function(opacity) {
+    return 'rgba(' + randomColorFactor() + ','
+        + randomColorFactor() + ',' + randomColorFactor() + ','
+        + (opacity || '.3') + ')';
+};
+
+
 // Mutable game state.
 //
 var GameState = {
@@ -47,19 +59,21 @@ var GameState = {
 //
 var nextOpponent = function(opponents) {
     opponents = opponents || Object.keys(GameState.data.opponents);
-    var k, opponent;
+    var k, opponent, score;
 
     var sumScores = 0;
     for (k in opponents) {
         opponent = opponents[k];
-        sumScores += GameState.scores.opponents[opponent];
+        score = GameState.scores.opponents[opponent];
+        sumScores += score * score;
     }
 
     var i = Math.floor(Math.random() * sumScores);
     var j = 0;
     for (k in opponents) {
         opponent = opponents[k];
-        j += GameState.scores.opponents[opponent];
+        score = GameState.scores.opponents[opponent];
+        j += score * score;
         if (j >= i)
             break;
     }
@@ -378,6 +392,9 @@ var endRound_rabt = function(btnId) {
     GameState.scores.opponents[opA] = newAScore;
     GameState.scores.opponents[opB] = newBScore;
 
+    GameState.rounds_played.opponents[opA] += 1;
+    GameState.rounds_played.opponents[opB] += 1;
+
     return null; // Non-competitive game, no feedback to show.
 };
 
@@ -414,6 +431,7 @@ var endRound = function(/* ID of the button pressed: */btnId) {
         var displayFeedback = playerWon ? displayCorrect : displayIncorrect;
         displayFeedback();
     }
+    updateAnalytics();
 
     // TODO: Pause before proceeding to next round.
     newRound();
@@ -593,6 +611,161 @@ var newGame_rabt = function() {
 };
 
 
+//
+// Initialise analytics pane.
+//
+var initAnalytics = function() {
+    var opponents = Object.keys(GameState.data.opponents).sort();
+
+    //
+    // Scores graph:
+    //
+    var datasets = [];
+    for (var i = 0; i < opponents.length; i++) {
+        datasets.push({
+            label: opponents[i],
+            data: [GameState.scores.opponents[opponents[i]]],
+            fill: false
+        });
+    }
+    var labels = [];
+    for (var i = 0; i < datasets[0].data.length; i++)
+        labels.push(i);
+
+    window.ScoresConfig = {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: datasets
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display: false
+                // position: 'top'
+            },
+            hover: {
+                mode: 'label'
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: { display: false },
+                    ticks: { display: false }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Score'
+                    }
+                }]
+            },
+            title: { display: false }
+        }
+    };
+
+    var colors = [];
+    $.each(window.ScoresConfig.data.datasets, function(i, dataset) {
+        var background = randomColor(0.5);
+        colors.push(background);
+        dataset.borderColor = background;
+        dataset.backgroundColor = background;
+        dataset.pointBorderColor = background;
+        dataset.pointBackgroundColor = background;
+        dataset.pointBorderWidth = 1;
+    });
+
+    var ctx = $('.graph.scores');
+    window.ScoresChart = new Chart(ctx, window.ScoresConfig);
+
+    //
+    // Rounds played graph:
+    //
+    var vals = [];
+    for (var i = 0; i < opponents.length; i++)
+        vals.push(0);
+
+    window.RoundsConfig = {
+        type: 'bar',
+        data: {
+            labels: opponents,
+            datasets: [{
+                label: 'Rounds played',
+                data: vals,
+                backgroundColor: colors[0] // TODO: Fix colors
+            }]
+        },
+        options: {
+            responsive: true,
+            legend: {
+                display: false
+            },
+            hover: {
+                mode: 'label'
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: { display: false },
+                    ticks: { display: true }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Rounds Played'
+                    },
+                    ticks: {
+                        min: 0
+                    }
+                }]
+            },
+            title: { display: false },
+            animation: false
+        }
+    };
+
+    var ctx = $('.graph.rounds-played');
+    window.RoundsChart = new Chart(ctx, window.RoundsConfig);
+
+    // for (i = 0; i < colors.length; i++)
+};
+
+
+//
+// Update Analytics panel.
+//
+var updateAnalytics = function() {
+    var opponents = Object.keys(GameState.data.opponents).sort();
+
+    //
+    // Scores graph:
+    //
+    var label = 'Round ' + GameState.rounds_played.player;
+    window.ScoresConfig.data.labels.push(label);
+    $.each(window.ScoresConfig.data.datasets, function(i, dataset) {
+        var latest = GameState.scores.opponents[opponents[i]];
+        dataset.data.push(latest);
+    });
+    window.ScoresChart.update();
+
+    //
+    // Rounds played graph:
+    //
+    var vals = [];
+    for (var i = 0; i < opponents.length; i++) {
+        vals.push(GameState.rounds_played.opponents[opponents[i]]);
+    }
+
+    window.RoundsConfig.data.datasets[0] = {
+        label: 'Rounds played',
+        data: vals
+    };
+    window.RoundsChart.update();
+};
+
+
 var newGame = function(game_id, mode) {
     // console.log('DEBUG: newGame()');
 
@@ -643,6 +816,8 @@ var newGame = function(game_id, mode) {
     $(preambleSel + ' .title').text(sanitizeModeName(mode, true));
     $(preambleSel + ' .data-src').text(GameState.data.data_src);
     $(preambleSel).show();
+
+    initAnalytics();
 
     // Run mode-specific game set up, if there is one.
     var fn = window['newGame_' + mode];

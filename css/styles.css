@@ -82,7 +82,7 @@ canvas {
   text-align: left;
   margin-bottom: 2em;
   word-wrap: break-word;
-  font-size: 125%;
+  font-size: 100%;
 
   /* word wrapping for <pre> tag: */
   white-space: pre-wrap;
@@ -96,6 +96,10 @@ canvas {
   color: #d9332f;
 }
 
+.nitt .arena .artifact.literature {
+  font-size: 125%;
+}
+
 .arena .artifact.literature {  /* literature */
   font-family: 'Lora', serif;
   font-style: italic;
@@ -105,8 +109,12 @@ canvas {
 }
 
 .arena .artifact.code {  /* source code */
-  font-size: 105%;
   font-family: 'Ubuntu Mono';
+}
+
+.analytics {
+  border-left: solid 1px #aaa;
+  min-height: 400px;
 }
 
 .tooltipDiv {
