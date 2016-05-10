@@ -12,6 +12,10 @@ def score2txt(score):
     return str(score) + ' / 5.0'
 
 def json2review(data):
+    # Ignore empty reviews
+    if len(data['reviewText']) < 10:
+        raise KeyError("foo")
+
     return (
         score2txt(data['overall']) + '\n' +
         data['summary'] + '\n' +
