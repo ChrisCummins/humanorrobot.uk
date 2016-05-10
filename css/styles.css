@@ -126,6 +126,9 @@ canvas {
   font-weight: bold;
 }
 .arena .artifact.review .author {
+  color: #0066c0;
+}
+.arena .artifact.review .author .by {
   color: #555;
 }
 .arena .artifact.review .review {

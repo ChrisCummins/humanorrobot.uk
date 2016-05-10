@@ -97,9 +97,14 @@ var score2html = function(score) {
 };
 
 
+var author2html = function(author) {
+    var stripped = author.replace(/^By /i, "");
+    return '<span class="by">By </span>' + stripped;
+};
+
+
 var setExtract = function(element, extract) {
     if (element.hasClass('review')) {
-        var text = $('<textarea />').html(extract).text();
         var lines = extract.split('<br/>');
 
         var score = lines[0];
@@ -109,7 +114,7 @@ var setExtract = function(element, extract) {
 
         html = '<div class="score">' + score2html(score) + '</div>'
             + '<div class="summary">' + summary + '</div>'
-            + '<div class="author">' + by + '</div>'
+            + '<div class="author">' + author2html(by) + '</div>'
             + '<div class="review">' + review + '</div>';
 
         element.html(html);
