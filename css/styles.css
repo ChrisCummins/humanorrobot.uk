@@ -83,6 +83,7 @@ canvas {
   margin-bottom: 2em;
   word-wrap: break-word;
   font-size: 100%;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 
   /* word wrapping for <pre> tag: */
   white-space: pre-wrap;
@@ -110,6 +111,27 @@ canvas {
 
 .arena .artifact.code {  /* source code */
   font-family: 'Ubuntu Mono';
+}
+
+.arena .artifact.review {  /* amazon review */
+  font-size: 110%;
+}
+.arena .artifact.review .score {
+  color: #ffb600;
+  display: inline-block;
+  float: left;
+  margin-right: 8px;
+}
+.arena .artifact.review .summary {
+  font-weight: bold;
+}
+.arena .artifact.review .author {
+  color: #555;
+}
+.arena .artifact.review .review {
+  margin-top: 10px;
+  color: #111;
+  font-family: Arial, sans-serif;
 }
 
 .analytics {

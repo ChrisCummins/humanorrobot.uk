@@ -82,6 +82,43 @@ var nextOpponent = function(opponents) {
 };
 
 
+var score2html = function(score) {
+    var num = parseFloat(score);
+    var html = '';
+    for (var i = 0; i < num; i++)
+        html += '<i class="fa fa-star" aria-hidden="true"></i>';
+    if (num % 1)
+        html += '<i class="fa fa-star-half-o" aria-hidden="true"></i>';
+    var num_left = 5 - Math.floor(num);
+    for (i = 0; i < num_left; i++)
+        html += '<i class="fa fa-star-o" aria-hidden="true"></i>';
+
+    return html;
+};
+
+
+var setExtract = function(element, extract) {
+    if (element.hasClass('review')) {
+        var text = $('<textarea />').html(extract).text();
+        var lines = extract.split('<br/>');
+
+        var score = lines[0];
+        var summary = lines[1];
+        var by = lines[2];
+        var review = lines[4];
+
+        html = '<div class="score">' + score2html(score) + '</div>'
+            + '<div class="summary">' + summary + '</div>'
+            + '<div class="author">' + by + '</div>'
+            + '<div class="review">' + review + '</div>';
+
+        element.html(html);
+    } else {
+        element.html(extract);
+    }
+};
+
+
 var newRound_abt = function() {
     // console.log('DEBUG: newRound_abt()');
 
@@ -104,8 +141,8 @@ var newRound_abt = function() {
     var nextA = humanisA ? nextHumanExtract : nextRobotExtract;
     var nextB = humanisA ? nextRobotExtract : nextHumanExtract;
 
-    $('#arena-a').html(nextA);
-    $('#arena-b').html(nextB);
+    setExtract($('#arena-a'), nextA);
+    setExtract($('#arena-b'), nextB);
 
     console.log('New round! human on left: ' + humanisA +
                 ', opponent = ' + opponent_name);
@@ -141,8 +178,8 @@ var newRound_rabt = function() {
     opponent.samples.splice(i, 1);
     GameState.round.extractB = opponentB_sample;
 
-    $('.rabt-arena-a').html(GameState.round.extractA);
-    $('.rabt-arena-b').html(GameState.round.extractB);
+    setExtract($('.rabt-arena-a'), GameState.round.extractA);
+    setExtract($('.rabt-arena-b'), GameState.round.extractB);
 
     console.log('New round! left = ' + GameState.round.opponentA +
                 ', right = ' + GameState.round.opponentB);
@@ -173,7 +210,8 @@ var newRound_nitt = function() {
         GameState.round.extract = opponent.samples[i];
         opponent.samples.splice(i, 1);
     }
-    $('#arena').html(GameState.round.extract);
+
+    setExtract($('#arena'), GameState.round.extract);
 
     var msg = 'New round! human: ' + ishuman;
     if (!ishuman)
