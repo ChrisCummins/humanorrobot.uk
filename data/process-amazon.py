@@ -5,11 +5,15 @@
 #     http://jmcauley.ucsd.edu/data/amazon/
 #
 import json
+import html
 
 from argparse import ArgumentParser
 
 def score2txt(score):
     return str(score) + ' / 5.0'
+
+def decode(s):
+    return html.unescape(s)
 
 def json2review(data):
     # Ignore empty reviews
@@ -18,9 +22,9 @@ def json2review(data):
 
     return (
         score2txt(data['overall']) + '\n' +
-        data['summary'] + '\n' +
-        'By ' + data['reviewerName'] + '\n\n' +
-        data['reviewText']
+        decode(data['summary']) + '\n' +
+        decode(data['reviewerName']) + '\n\n' +
+        decode(data['reviewText'])
     )
 
 def main():
