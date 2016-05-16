@@ -3,7 +3,7 @@
 # Get artifacts.
 #
 import json
-import cgi
+import html
 import math
 import os
 import re
@@ -19,12 +19,35 @@ from multiprocessing import cpu_count,Pool
 from subprocess import Popen,PIPE,STDOUT
 from tempfile import NamedTemporaryFile
 
+max_review_charlen = 800
+
+def get_substring_idxs(substr, s):
+    return [m.start() for m in re.finditer(substr, s)]
+
+def get_amazon_review_artifacts(s, n):
+    truncated_artifacts_count = {'val': 0}
+
+    def truncate(s):
+        if len(s) > max_review_charlen:
+            s = s[:max_review_charlen - len('[... truncated]')]
+            s += ' [... truncated]'
+            truncated_artifacts_count['val'] += 1
+        return s
+
+    artifacts = []
+    lines = s.split('**********')
+    artifacts = [truncate(x.strip()) for x in lines[:n]]
+
+    print('truncated artifacts:', truncated_artifacts_count['val'],
+          file=sys.stderr)
+    return artifacts
+
 min_lit_charlen = 300
 min_lit_lines = 2
 max_lit_charlen = 500
 max_lit_lines = 10
 
-def get_lit_kernels(s, n):
+def get_lit_artifacts(s, n):
     ignored_artifacts_count = 0
 
     artifacts = []
@@ -121,9 +144,11 @@ def get_artifacts_from_file(inpath, mode="literature", num_artifacts=300):
         s = infile.read()
 
         if mode == "literature":
-            artifacts = get_lit_kernels(s, num_artifacts)
+            artifacts = get_lit_artifacts(s, num_artifacts)
         elif mode == "cl":
             artifacts = get_cl_kernels(s, num_artifacts)
+        elif mode == "review":
+            artifacts = get_amazon_review_artifacts(s, num_artifacts)
         else:
             print('Unrecognised mode', mode, file=sys.stderr)
 
@@ -188,8 +213,39 @@ def get_shakespeare_game():
     return data
 
 
+def get_amazon_electronics_game():
+    human = get_artifacts_from_file('amazon/human.txt',
+                                    mode="review")
+    alice = get_artifacts_from_file('amazon/alice.txt',
+                                    mode="review")
+    bob = get_artifacts_from_file('amazon/bob.txt',
+                                  mode="review")
+    eve = get_artifacts_from_file('amazon/eve.txt',
+                                  mode="review")
+    # bravo = get_artifacts_from_file('amazon/sample2.txt',
+    #                                 mode="review")
+    # charlie = get_artifacts_from_file('amazon/sample3.txt',
+    #                                   mode="review")
+
+    data = {
+        "name": "Misc: Amazon Reviews",
+        "description": "Reviews of electronics items on Amazon",
+        "modes": ["nitt", "abt", "rabt"],
+        "artifact_type": "review",
+        "data_src": "Amazon product reviews",
+        "human": { "samples": human },
+        "opponents": {
+            "Alice": { "samples": alice },
+            "Bob": { "samples": bob },
+            "Eve": { "samples": eve }
+        }
+    }
+
+    return data
+
+
 def encode(s):
-    return '<br/>'.join([cgi.escape(x.rstrip()) for x in s.split('\n')])
+    return '<br/>'.join([html.escape(x.rstrip()) for x in s.split('\n')])
 
 
 def obj2json(obj):
@@ -199,7 +255,8 @@ def obj2json(obj):
 def main():
     GameData = {
         "shakespeare": get_shakespeare_game(),
-        "opencl": get_opencl_game()
+        "opencl": get_opencl_game(),
+        "amazon-electronics": get_amazon_electronics_game()
     }
     print('var GameData =', obj2json(GameData))
 
