@@ -117,13 +117,11 @@ def get_cl_kernels(s, n):
         kernel = s[:i]
 
         if i == max_kern_charlen or l == max_kern_lines:
-            kernel += '\n/* --- TRUNCATED --- */'
-            truncated_artifacts_count += 1
-
-        if l > min_kern_lines and i > min_kern_charlen:
+            ignored_artifacts_count += 1  # Too long
+        elif l > min_kern_lines and i > min_kern_charlen:
             artifacts.append(kernel)
         else:
-            ignored_artifacts_count
+            ignored_artifacts_count += 1  # Too short
 
         # Pop the kernel from the front of the string.
         s = s[i:]
