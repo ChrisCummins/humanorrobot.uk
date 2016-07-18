@@ -77,8 +77,12 @@
         </ul>
       </div>
       <hr/>
-      <div class="game-list text-center"><!-- auto-generated: --></div>
-      <p class="lead text-center">
+      <div class="game-list text-center">
+        <p class="lead text-center loading-spinner">
+          <span class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span> Downloading games ...
+        </p>
+      </div>
+      <p class="lead text-center more-coming-soon hidden">
         More games coming soon!
       </p>
     </div>
@@ -94,34 +98,40 @@
   <script language='javascript' type="text/javascript" src='/js/humanorrobot.js'></script>
 
   <script language="javascript" type="text/javascript">
-   for (var game_id in GameData) {
-       var data = GameData[game_id];
-       var name = data.name;
-       var description = data.description;
+   jQuery(window).load(function () {
+       $('.loading-spinner').hide();
 
-       var gameHTML = '<div class="game">'
-                    + '  <h3>' + name + '</h3>'
-                    + '  <div class="description lead">'
-                    + '    <p>' + description + '.</p>'
-                    + '  </div>'
-                    + '  <div class="modes">';
+       for (var game_id in GameData) {
+           var data = GameData[game_id];
+           var name = data.name;
+           var description = data.description;
 
-       for (var i in data.modes) {
-           var mode = data.modes[i];
-           var url = '/game/?g=' + game_id + '&m=' + mode;
-           var btnClass = mode[0] == 'r' ? 'warning' : 'success';
+           var gameHTML = '<div class="game">'
+                        + '  <h3>' + name + '</h3>'
+                        + '  <div class="description lead">'
+                        + '    <p>' + description + '.</p>'
+                        + '  </div>'
+                        + '  <div class="modes">';
 
-           gameHTML += '    <a href="' + url + '" type="button" '
-                     + '     class="btn btn-lg btn-' + btnClass
-                     +       '" title="'
-                     +       sanitizeModeName(mode, true) + '">'
-                     +       sanitizeModeName(mode) + '</a> ';
+           for (var i in data.modes) {
+               var mode = data.modes[i];
+               var url = '/game/?g=' + game_id + '&m=' + mode;
+               var btnClass = mode[0] == 'r' ? 'warning' : 'success';
+
+               gameHTML += '    <a href="' + url + '" type="button" '
+                         + '     class="btn btn-lg btn-' + btnClass
+                   +       '" title="'
+                   +       sanitizeModeName(mode, true) + '">'
+                   +       sanitizeModeName(mode) + '</a> ';
+           }
+           gameHTML += '  </div>'
+                     + '</div>'
+                     + '<hr/>';
+
+           $('.game-list').append(gameHTML);
        }
-       gameHTML += '  </div>'
-                 + '</div>'
-                 + '<hr/>';
 
-       $('.game-list').append(gameHTML);
-   }
+       $('.more-coming-soon').removeClass('hidden');
+   });
   </script>
 </body>
