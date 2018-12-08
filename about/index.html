@@ -1,91 +1,102 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Human or Robot?</title>
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+  <title>Human or Robot?</title>
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link href='https://fonts.googleapis.com/css?family=Bitter:400,400italic|Lora:400,400italic' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+        integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+        crossorigin="anonymous">
+  <link href='https://fonts.googleapis.com/css?family=Bitter:400,400italic|Lora:400,400italic'
+        rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="/css/styles.css">
 
-    <!-- Google Analytics -->
-    <script>
-     !function(e,t,a,n,c,s,o){e.GoogleAnalyticsObject=c,e[c]=e[c]||function(){(e[c].q=e[c].q||[]).push(arguments)},e[c].l=1*new Date,s=t.createElement(a),o=t.getElementsByTagName(a)[0],s.async=1,s.src=n,o.parentNode.insertBefore(s,o)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-76875432-1","auto"),ga("send","pageview");
-    </script>
-  </head>
+  <!-- Google Analytics -->
+  <script>
+    !function (e, t, a, n, c, s, o) {
+      e.GoogleAnalyticsObject = c, e[c] = e[c] || function () {
+        (e[c].q = e[c].q || []).push(arguments)
+      }, e[c].l = 1 * new Date, s = t.createElement(a), o = t.getElementsByTagName(
+          a)[0], s.async = 1, s.src = n, o.parentNode.insertBefore(s, o)
+    }(window, document, "script", "https://www.google-analytics.com/analytics.js", "ga"), ga(
+        "create", "UA-76875432-1", "auto"), ga("send", "pageview");
+  </script>
+</head>
 </html>
 
 <body>
-  <div class="container">
-    <div class="header clearfix">
-      <nav>
-        <ul class="nav nav-pills pull-right">
-          <li role="presentation"><a href="/">Games</a></li>
-          <li role="presentation" class="active"><a href="/about">About</a></li>
-        </ul>
-      </nav>
-      <h3 class="site-header">
-        <a href="/">
-          <span class="human">human</span><span class="or">or</span><span class="robot">robot</span>.<span class="tld">uk</span>
-        </a>
-      </h3>
-    </div>
+<div class="container">
+  <div class="header clearfix">
+    <nav>
+      <ul class="nav nav-pills pull-right">
+        <li role="presentation"><a href="/">Games</a></li>
+        <li role="presentation" class="active"><a href="/about">About</a></li>
+      </ul>
+    </nav>
+    <h3 class="site-header">
+      <a href="/">
+        <span class="human">human</span><span class="or">or</span><span
+          class="robot">robot</span>.<span class="tld">uk</span>
+      </a>
+    </h3>
+  </div>
 
-    <div class="row scoreboard" style="display: none;">
-      <div class="col-sm-3">
-        <span class="round">Round <span id="round-count">1</span></span>
-      </div>
-      <div class="col-sm-6 text-center">
+  <div class="row scoreboard" style="display: none;">
+    <div class="col-sm-3">
+      <span class="round">Round <span id="round-count">1</span></span>
+    </div>
+    <div class="col-sm-6 text-center">
         <span class="scores">
           Player: <span id="score-player" class="score">1000</span>,
           <!-- Shakespeare: <span id="score-human" class="score">1000</span>, -->
           Robot: <span id="score-robot" class="score">1000</span>
         </span>
-      </div>
-      <div class="col-sm-3 text-right">
-        <span id="correct" class="result">Correct!</span>
-        <span id="incorrect" class="result">Incorrect!</span>
-      </div>
     </div>
-
-    <div>
-      <p class="lead">
-        This site pitches humans vs. robots in a battle of wit. The goal of the robots
-        is to plausibly pass off as humans. Your goal as a human is to sniff them
-        out.
-      </p>
-
-      <p class="lead">
-        To talk to a human, drop me an email at
-        <a href="mailto:chrisc.101@gmail.com">chrisc.101@gmail.com</a>.
-      </p>
-
-      <hr/>
-
-      <h3>Privacy</h3>
-      <p class="lead">
-        In using this site, you agree to allow certain behavioural and
-        identifying data to be collected about you. For example, we
-        will record the results of any games you play and your public
-        IP address.
-      </p>
-      <p class="lead">
-        Basically, you consent to the possibility of becoming a
-        statistic in an academic's paper.
-      </p>
+    <div class="col-sm-3 text-right">
+      <span id="correct" class="result">Correct!</span>
+      <span id="incorrect" class="result">Incorrect!</span>
     </div>
+  </div>
 
-  </div> <!-- /container -->
+  <div>
+    <p class="lead">
+      This site pitches humans vs. robots in a battle of wit. The goal of the robots
+      is to plausibly pass off as humans. Your goal as a human is to sniff them
+      out.
+    </p>
 
-  <footer class="footer text-center">
-    <p>&copy; 2016 <a href="http://chriscummins.cc" target="_blank">Chris Cummins</a>.</p>
-  </footer>
+    <p class="lead">
+      To talk to a human, drop me an email at
+      <a href="mailto:chrisc.101@gmail.com">chrisc.101@gmail.com</a>.
+    </p>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <hr/>
+
+    <h3>Privacy</h3>
+    <p class="lead">
+      In using this site, you agree to allow certain behavioural and
+      identifying data to be collected about you. For example, we
+      will record the results of any games you play and your public
+      IP address.
+    </p>
+    <p class="lead">
+      Basically, you consent to the possibility of becoming a
+      statistic in an academic's paper.
+    </p>
+  </div>
+
+</div> <!-- /container -->
+
+<footer class="footer text-center">
+  <p>&copy; 2016 <a href="http://chriscummins.cc" target="_blank">Chris Cummins</a>.</p>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 </body>

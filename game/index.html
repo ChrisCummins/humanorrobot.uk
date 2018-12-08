@@ -1,276 +1,295 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Human or Robot?</title>
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+  <title>Human or Robot?</title>
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
 
-    <!-- Third party CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+  <!-- Third party CSS -->
+  <link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+        integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+        crossorigin="anonymous">
+  <link rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
 
-    <!-- Arena fonts -->
-    <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono|Lora:400,400italic' rel='stylesheet' type='text/css'>
+  <!-- Arena fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Ubuntu+Mono|Lora:400,400italic'
+        rel='stylesheet' type='text/css'>
 
-    <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/styles.css">
 
-    <!-- Google Analytics -->
-    <script>
-     !function(e,t,a,n,c,s,o){e.GoogleAnalyticsObject=c,e[c]=e[c]||function(){(e[c].q=e[c].q||[]).push(arguments)},e[c].l=1*new Date,s=t.createElement(a),o=t.getElementsByTagName(a)[0],s.async=1,s.src=n,o.parentNode.insertBefore(s,o)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-76875432-1","auto"),ga("send","pageview");
-    </script>
-  </head>
+  <!-- Google Analytics -->
+  <script>
+    !function (e, t, a, n, c, s, o) {
+      e.GoogleAnalyticsObject = c, e[c] = e[c] || function () {
+        (e[c].q = e[c].q || []).push(arguments)
+      }, e[c].l = 1 * new Date, s = t.createElement(a), o = t.getElementsByTagName(
+          a)[0], s.async = 1, s.src = n, o.parentNode.insertBefore(s, o)
+    }(window, document, "script", "https://www.google-analytics.com/analytics.js", "ga"), ga(
+        "create", "UA-76875432-1", "auto"), ga("send", "pageview");
+  </script>
+</head>
 </html>
 
 <body>
-  <div class="container">
-    <div class="header clearfix">
-      <nav>
-        <ul class="nav nav-pills pull-right">
-          <li role="presentation"><a href="/">Games</a></li>
-          <li role="presentation"><a href="/about">About</a></li>
-        </ul>
-      </nav>
-      <h3 class="site-header">
-        <a href="/">
-          <span class="human">human</span><span class="or">or</span><span class="robot">robot</span>.<span class="tld">uk</span>
-        </a>
-      </h3>
+<div class="container">
+  <div class="header clearfix">
+    <nav>
+      <ul class="nav nav-pills pull-right">
+        <li role="presentation"><a href="/">Games</a></li>
+        <li role="presentation"><a href="/about">About</a></li>
+      </ul>
+    </nav>
+    <h3 class="site-header">
+      <a href="/">
+        <span class="human">human</span><span class="or">or</span><span
+          class="robot">robot</span>.<span class="tld">uk</span>
+      </a>
+    </h3>
+  </div>
+
+  <div id="giveaway" class="tooltipDiv">giveaway</div>
+
+
+  <!-- Game scores -->
+  <div class="row scoreboard" style="display: none;">
+    <div class="col-sm-3">
+      <span class="round">Round <span id="round-count">1</span></span>
     </div>
-
-    <div id="giveaway" class="tooltipDiv">giveaway</div>
-
-
-    <!-- Game scores -->
-    <div class="row scoreboard" style="display: none;">
-      <div class="col-sm-3">
-        <span class="round">Round <span id="round-count">1</span></span>
-      </div>
-      <div class="col-sm-6 text-center">
+    <div class="col-sm-6 text-center">
         <span class="scores">
           Player: <span id="score-player" class="score">1000</span>,
           Robot: <span id="score-robot" class="score">1000</span>
         </span>
-      </div>
-      <div class="col-sm-3 text-right">
-        <span id="correct" class="result">Correct!</span>
-        <span id="incorrect" class="result">Incorrect!</span>
-      </div>
     </div>
+    <div class="col-sm-3 text-right">
+      <span id="correct" class="result">Correct!</span>
+      <span id="incorrect" class="result">Incorrect!</span>
+    </div>
+  </div>
 
-    <div class="row">
-      <!-- Non-Interactive Turing Test -->
-      <div class="game">
-        <div class="nitt" style="display: none;">
-          <div class="preamble">
-            <div class="col-md-1"></div>
-            <div class="jumbotron col-md-6">
-              <h3 class="title"></h3>
-              <hr/>
-              <p class="lead">
-                In this game you will be shown extracts of text. Your role is
-                to determine whether each extract was written by a human or a
-                robot. The human text comes from <span class="data-src"></span>.
-                Good Luck!
-              </p>
-              <p class="lead">
-                <strong>Hint:</strong> The first extract is <i>always</i> written
-                by a human.
-              </p>
-              <p>
-                <a class="btn decision btn-lg btn-info game-start-btn" href="#" role="button">
-                  <i class="fa fa-play" aria-hidden="true"></i>
-                  Play
-                </a>
-              </p>
-            </div>
-            <div class="col-md-1"></div>
-          </div>  <!-- /.preamble -->
+  <div class="row">
+    <!-- Non-Interactive Turing Test -->
+    <div class="game">
+      <div class="nitt" style="display: none;">
+        <div class="preamble">
+          <div class="col-md-1"></div>
+          <div class="jumbotron col-md-6">
+            <h3 class="title"></h3>
+            <hr/>
+            <p class="lead">
+              In this game you will be shown extracts of text. Your role is
+              to determine whether each extract was written by a human or a
+              robot. The human text comes from <span class="data-src"></span>.
+              Good Luck!
+            </p>
+            <p class="lead">
+              <strong>Hint:</strong> The first extract is <i>always</i> written
+              by a human.
+            </p>
+            <p>
+              <a class="btn decision btn-lg btn-info game-start-btn" href="#" role="button">
+                <i class="fa fa-play" aria-hidden="true"></i>
+                Play
+              </a>
+            </p>
+          </div>
+          <div class="col-md-1"></div>
+        </div>  <!-- /.preamble -->
 
-          <div class="arena">
-            <div class="col-md-8">
+        <div class="arena">
+          <div class="col-md-8">
               <pre id="arena" class="artifact">
               Loading ...
               </pre>
-              <p>
-                <a id="human" class="btn decision btn-lg btn-success game-end-rnd-btn" href="#" role="button">
-                  <i class="fa fa-user" aria-hidden="true"></i>
-                  Human
-                </a>
-                <a id="robot" class="btn decision btn-lg btn-danger game-end-rnd-btn" href="#" role="button">
-                  <i class="fa fa-cogs" aria-hidden="true"></i>
-                  Robot
-                </a>
-              </p>
-            </div>
-            <!-- <div class="col-md-4 analytics"><\!-- results pane -\-> -->
-            <!--    <canvas class="graph scores" width="400" height="200"></canvas> -->
-            <!--    <canvas class="graph rounds-played" width="400" height="250"></canvas> -->
-            <!-- </div> -->
-          </div>  <!-- /.arena -->
-        </div>  <!-- /.nitt -->
-      </div> <!-- /.game -->
+            <p>
+              <a id="human" class="btn decision btn-lg btn-success game-end-rnd-btn" href="#"
+                 role="button">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                Human
+              </a>
+              <a id="robot" class="btn decision btn-lg btn-danger game-end-rnd-btn" href="#"
+                 role="button">
+                <i class="fa fa-cogs" aria-hidden="true"></i>
+                Robot
+              </a>
+            </p>
+          </div>
+          <!-- <div class="col-md-4 analytics"><\!-- results pane -\-> -->
+          <!--    <canvas class="graph scores" width="400" height="200"></canvas> -->
+          <!--    <canvas class="graph rounds-played" width="400" height="250"></canvas> -->
+          <!-- </div> -->
+        </div>  <!-- /.arena -->
+      </div>  <!-- /.nitt -->
+    </div> <!-- /.game -->
 
 
-      <!-- A/B Test -->
-      <div class="game">
-        <div class="abt" style="display: none;">
-          <div class="preamble">
-            <div class="col-md-1"></div>
-            <div class="jumbotron col-md-6">
-              <h3 class="title"></h3>
-              <hr/>
-              <p class="lead">
-                In this game you be shown two extracts of text, side by
-                side. One of them was written a human, the other by a
-                robot. Your role is to determine which of the two was written by a robot. The human text
-                comes from <span class="data-src"></span>. Good
-                luck!
-              </p>
-              <p class="lead">
-                <strong>Hint:</strong> In the first round, the human text is
-                always on the <i>left</i>.
-              </p>
-              <p>
-                <a class="btn decision btn-lg btn-info game-start-btn" href="#" role="button">
-                  <i class="fa fa-play" aria-hidden="true"></i>
-                  Play
-                </a>
-              </p>
-            </div>
-            <div class="col-md-1"></div>
-          </div>  <!-- /.preamble -->
+    <!-- A/B Test -->
+    <div class="game">
+      <div class="abt" style="display: none;">
+        <div class="preamble">
+          <div class="col-md-1"></div>
+          <div class="jumbotron col-md-6">
+            <h3 class="title"></h3>
+            <hr/>
+            <p class="lead">
+              In this game you be shown two extracts of text, side by
+              side. One of them was written a human, the other by a
+              robot. Your role is to determine which of the two was written by a robot. The human
+              text
+              comes from <span class="data-src"></span>. Good
+              luck!
+            </p>
+            <p class="lead">
+              <strong>Hint:</strong> In the first round, the human text is
+              always on the <i>left</i>.
+            </p>
+            <p>
+              <a class="btn decision btn-lg btn-info game-start-btn" href="#" role="button">
+                <i class="fa fa-play" aria-hidden="true"></i>
+                Play
+              </a>
+            </p>
+          </div>
+          <div class="col-md-1"></div>
+        </div>  <!-- /.preamble -->
 
-          <div class="arena" style="display:none;">
-            <div class="col-md-4">
+        <div class="arena" style="display:none;">
+          <div class="col-md-4">
               <pre id="arena-a" class="lead artifact">
               Loading ...
               </pre>
-              <p>
-                <a id="is-a-btn" class="btn decision btn-lg btn-danger game-end-rnd-btn" href="#" role="button">
-                  <i class="fa fa-cogs" aria-hidden="true"></i>
-                  This side is the Robot
-                </a>
-              </p>
-            </div>
-            <div class="col-md-4">
+            <p>
+              <a id="is-a-btn" class="btn decision btn-lg btn-danger game-end-rnd-btn" href="#"
+                 role="button">
+                <i class="fa fa-cogs" aria-hidden="true"></i>
+                This side is the Robot
+              </a>
+            </p>
+          </div>
+          <div class="col-md-4">
               <pre id="arena-b" class="lead artifact">
               Loading ...
               </pre>
-              <p>
-                <a id="is-b-btn" class="btn decision btn-lg btn-danger game-end-rnd-btn" href="#" role="button">
-                  <i class="fa fa-cogs" aria-hidden="true"></i>
-                  This side is the Robot
-                </a>
-              </p>
-            </div>
-          </div>  <!-- /.arena -->
-        </div>  <!-- /.abt -->
-      </div> <!-- /.game -->
+            <p>
+              <a id="is-b-btn" class="btn decision btn-lg btn-danger game-end-rnd-btn" href="#"
+                 role="button">
+                <i class="fa fa-cogs" aria-hidden="true"></i>
+                This side is the Robot
+              </a>
+            </p>
+          </div>
+        </div>  <!-- /.arena -->
+      </div>  <!-- /.abt -->
+    </div> <!-- /.game -->
 
-      <!-- Robot-only A/B Test -->
-      <div class="game">
-        <div class="rabt" style="display: none;">
-          <div class="preamble">
-            <div class="col-md-1"></div>
-            <div class="jumbotron col-md-6">
-              <h3 class="title"></h3>
-              <hr/>
-              <p class="lead">
-                This is an non-competitive game in which you be shown
-                two extracts of text, side by side. Your role is to
-                determine which of the two appears more
-                human-like. Enjoy!
-              </p>
-              <p>
-                <a class="btn decision btn-lg btn-info game-start-btn" href="#" role="button">
-                  <i class="fa fa-play" aria-hidden="true"></i>
-                  Play
-                </a>
-              </p>
-            </div>
-            <div class="col-md-1"></div>
-          </div>  <!-- /.preamble -->
+    <!-- Robot-only A/B Test -->
+    <div class="game">
+      <div class="rabt" style="display: none;">
+        <div class="preamble">
+          <div class="col-md-1"></div>
+          <div class="jumbotron col-md-6">
+            <h3 class="title"></h3>
+            <hr/>
+            <p class="lead">
+              This is an non-competitive game in which you be shown
+              two extracts of text, side by side. Your role is to
+              determine which of the two appears more
+              human-like. Enjoy!
+            </p>
+            <p>
+              <a class="btn decision btn-lg btn-info game-start-btn" href="#" role="button">
+                <i class="fa fa-play" aria-hidden="true"></i>
+                Play
+              </a>
+            </p>
+          </div>
+          <div class="col-md-1"></div>
+        </div>  <!-- /.preamble -->
 
-          <div class="arena" style="display:none;">
-            <div class="col-md-4">
+        <div class="arena" style="display:none;">
+          <div class="col-md-4">
               <pre class="lead artifact rabt-arena-a">
               Loading ...
               </pre>
-              <p>
-                <a id="is-a-btn" class="btn decision btn-lg btn-success game-end-rnd-btn" href="#" role="button">
-                  <i class="fa fa-user" aria-hidden="true"></i>
-                  This is more human-like
-                </a>
-              </p>
-            </div>
-            <div class="col-md-4">
+            <p>
+              <a id="is-a-btn" class="btn decision btn-lg btn-success game-end-rnd-btn" href="#"
+                 role="button">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                This is more human-like
+              </a>
+            </p>
+          </div>
+          <div class="col-md-4">
               <pre id="arena-b" class="lead artifact rabt-arena-b">
               Loading ...
               </pre>
-              <p>
-                <a id="is-b-btn" class="btn decision btn-lg btn-success game-end-rnd-btn" href="#" role="button">
-                  <i class="fa fa-user" aria-hidden="true"></i>
-                  This is more human-like
-                </a>
-              </p>
-            </div>
-          </div>  <!-- /.arena -->
-        </div>  <!-- /.rabt -->
-      </div> <!-- /.game -->
+            <p>
+              <a id="is-b-btn" class="btn decision btn-lg btn-success game-end-rnd-btn" href="#"
+                 role="button">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                This is more human-like
+              </a>
+            </p>
+          </div>
+        </div>  <!-- /.arena -->
+      </div>  <!-- /.rabt -->
+    </div> <!-- /.game -->
 
-      <div class="col-md-4 analytics"><!-- results pane -->
-        <canvas class="graph scores" width="400" height="250"></canvas>
-        <canvas class="graph rounds-played" width="400" height="200"></canvas>
-      </div>
+    <div class="col-md-4 analytics"><!-- results pane -->
+      <canvas class="graph scores" width="400" height="250"></canvas>
+      <canvas class="graph rounds-played" width="400" height="200"></canvas>
+    </div>
 
-    </div> <!-- /.row -->
+  </div> <!-- /.row -->
 
-  </div> <!-- /container -->
+</div> <!-- /container -->
 
-  <footer class="footer text-center">
-    <p>&copy; 2016 <a href="http://chriscummins.cc" target="_blank">Chris Cummins</a>.</p>
-  </footer>
+<footer class="footer text-center">
+  <p>&copy; 2016 <a href="http://chriscummins.cc" target="_blank">Chris Cummins</a>.</p>
+</footer>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.0.0/Chart.bundle.min.js"></script>
-  <script language='javascript' type='text/javascript' src="/js/elo.js"></script>
-  <script language='javascript' type="text/javascript" src='/js/dataset.js'></script>
-  <script language='javascript' type="text/javascript" src='/js/humanorrobot.js'></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.0.0/Chart.bundle.min.js"></script>
+<script language='javascript' type='text/javascript' src="/js/elo.js"></script>
+<script language='javascript' type="text/javascript" src='/js/dataset.js'></script>
+<script language='javascript' type="text/javascript" src='/js/humanorrobot.js'></script>
 
-  <script language="javascript" type="text/javascript">
-   var QueryString = function () {
-       // This function is anonymous, is executed immediately and
-       // the return value is assigned to QueryString!
-       var query_string = {};
-       var query = window.location.search.substring(1);
-       var vars = query.split("&");
-       for (var i=0;i<vars.length;i++) {
-           var pair = vars[i].split("=");
-           // If first entry with this name
-           if (typeof query_string[pair[0]] === "undefined") {
-               query_string[pair[0]] = decodeURIComponent(pair[1]);
-               // If second entry with this name
-           } else if (typeof query_string[pair[0]] === "string") {
-               var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
-               query_string[pair[0]] = arr;
-               // If third or later entry with this name
-           } else {
-               query_string[pair[0]].push(decodeURIComponent(pair[1]));
-           }
-       }
-       return query_string;
-   }();
+<script language="javascript" type="text/javascript">
+  var QueryString = function () {
+    // This function is anonymous, is executed immediately and
+    // the return value is assigned to QueryString!
+    var query_string = {};
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i = 0; i < vars.length; i++) {
+      var pair = vars[i].split("=");
+      // If first entry with this name
+      if (typeof query_string[pair[0]] === "undefined") {
+        query_string[pair[0]] = decodeURIComponent(pair[1]);
+        // If second entry with this name
+      } else if (typeof query_string[pair[0]] === "string") {
+        var arr = [query_string[pair[0]], decodeURIComponent(pair[1])];
+        query_string[pair[0]] = arr;
+        // If third or later entry with this name
+      } else {
+        query_string[pair[0]].push(decodeURIComponent(pair[1]));
+      }
+    }
+    return query_string;
+  }();
 
-   // Read game and mode from the query string:
-   var game = QueryString.g;
-   var mode = QueryString.m;
+  // Read game and mode from the query string:
+  var game = QueryString.g;
+  var mode = QueryString.m;
 
-   // Launch game:
-   newGame(game, mode);
-  </script>
+  // Launch game:
+  newGame(game, mode);
+</script>
 </body>
